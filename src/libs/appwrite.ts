@@ -16,5 +16,17 @@ client
             : (process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID as string)
     );
 
+
+    
 export const account = new Account(client);
 export { ID } from 'appwrite';
+
+const promise = account.createVerification({
+    url: isDev ?  process.env.NEXT_EMAIL_VERIFY_REDIRECT_DEV as string : process.env.NEXT_EMAIL_VERIFY_REDIRECT as string
+});
+
+promise.then(function (response) {
+    console.log(response); // Success
+}, function (error) {
+    console.log(error); // Failure
+});

@@ -68,7 +68,7 @@ const LoginForm = ({ className }: { className?: string }) => {
 
               <Field>
                 <FieldLabel htmlFor="username">Email</FieldLabel>
-                <Input id="username" type="email" placeholder="m@example.com" {...form.register("email")} />
+                <Input id="username" type="email" placeholder="marvel@example.com" {...form.register("email")} />
                 {form.formState.errors.email && (
                   <FieldDescription className="text-destructive">
                     {form.formState.errors.email.message}
