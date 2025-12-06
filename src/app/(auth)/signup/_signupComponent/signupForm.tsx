@@ -21,6 +21,7 @@ import { z } from "zod";
 import { createUserAction } from "../signup.action";
 import { toast } from "sonner";
 import { account } from "@/src/libs/appwrite";
+import { useRouter } from "next/navigation";
 
 const signUpSchema = z.object({
   email: z.email().min(2, {
@@ -34,7 +35,8 @@ const signUpSchema = z.object({
 type SignupFormType = z.output<typeof signUpSchema>;
 
 const SignupForm = ({ className }: { className?: string }) => {
-  const form = useForm<SignupFormType>({
+  const router = useRouter()
+    const form = useForm<SignupFormType>({
     resolver: zodResolver(signUpSchema),
     defaultValues: {
       email: "",
@@ -64,7 +66,7 @@ const SignupForm = ({ className }: { className?: string }) => {
             url: "http://localhost:3000/email-verify"
          }).then(()=>{
             toast.success("An email has be sent to you ")
-            
+            router.push('/check-email')
          }).catch(()=>{
             toast.error("something went wrong")
          })

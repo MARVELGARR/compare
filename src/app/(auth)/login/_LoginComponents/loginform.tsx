@@ -8,6 +8,10 @@ import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Field, FieldDescription, FieldGroup, FieldLabel, FieldSeparator } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
+import { loginWithEmailPassword } from "../login.config"
+import { toast } from "sonner"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 const inputFormSchema = z.object({
   email: z.email().min(2, {
@@ -20,6 +24,8 @@ const inputFormSchema = z.object({
 type InputFormType = z.output<typeof inputFormSchema>
 
 const LoginForm = ({ className }: { className?: string }) => {
+  const [isLoading, setIsLoading] = useState(false)
+  const router = useRouter()
   const form = useForm<InputFormType>({
     resolver: zodResolver(inputFormSchema),
     defaultValues: {
@@ -28,9 +34,23 @@ const LoginForm = ({ className }: { className?: string }) => {
     },
   })
 
-  const onSubmit = (values: InputFormType) => {
-    console.log(values)
+  const onSubmit = async (values: InputFormType) => {
+    setIsLoading(true)
+    try{
+      const user = await loginWithEmailPassword(values.email, values.password)
+
+      if(!user){
+        toast.error("failed to login")
+      }
+      setIsLoading(false)
+      return router.push("/application")
+    }
+    catch(error){
+      toast.error("Loging failed")
+    }
   }
+
+
 
   return (
     <div className={cn("flex flex-col gap-6", className)}>
@@ -78,7 +98,7 @@ const LoginForm = ({ className }: { className?: string }) => {
               <Field>
                 <div className="flex items-center">
                   <FieldLabel htmlFor="password">Password</FieldLabel>
-                  <a href="#" className="ml-auto text-sm underline-offset-4 hover:underline">
+                  <a href="/forget-password" className="ml-auto text-sm underline-offset-4 hover:underline">
                     Forgot your password?
                   </a>
                 </div>
@@ -90,7 +110,7 @@ const LoginForm = ({ className }: { className?: string }) => {
                 )}
               </Field>
               <Field>
-                <Button type="submit">Login</Button>
+                <Button disabled={isLoading}  type="submit">Login</Button>
                 <FieldDescription className="text-center">
                   Don&apos;t have an account? <a href="/signup">Sign up</a>
                 </FieldDescription>

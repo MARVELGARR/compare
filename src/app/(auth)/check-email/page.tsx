@@ -28,7 +28,7 @@ export default function CheckEmail() {
         <CardContent className="space-y-6">
           <div className="space-y-3">
             <div className="flex gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium">Check your inbox</p>
                 <p className="text-muted-foreground">Look for an email from us</p>
@@ -36,7 +36,7 @@ export default function CheckEmail() {
             </div>
 
             <div className="flex gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium">Click the confirmation link</p>
                 <p className="text-muted-foreground">Open the link to activate your account</p>
@@ -44,7 +44,7 @@ export default function CheckEmail() {
             </div>
 
             <div className="flex gap-3">
-              <CheckCircle className="w-5 h-5 text-green-600 flex-shrink-0 mt-0.5" />
+              <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
               <div className="text-sm">
                 <p className="font-medium">Don't see the email?</p>
                 <p className="text-muted-foreground">Check your spam or junk folder</p>
