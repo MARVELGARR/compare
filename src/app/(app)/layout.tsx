@@ -3,13 +3,15 @@ import { ReactNode } from "react";
 
 
 export const metadata: Metadata ={
-    title: "Compare",
+    title: "FavCompare",
     description: "Compare your fav progress",
 }
 
 const AppLayout = ({children}: {children: ReactNode}) => {
     return (
-        <div className="">{children}</div>
+        <div className="">
+            {children}
+            </div>
     );
 }
  

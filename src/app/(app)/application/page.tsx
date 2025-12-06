@@ -1,6 +1,14 @@
+
+
+"use client"
+
+import { HeaderProfile } from "../_LayoutComponents/HeaderComponent";
+
 const Page = () => {
     return (
-        <div className=""></div>
+        <div className="">
+            <HeaderProfile/>dsds
+        </div>
     );
 }
  

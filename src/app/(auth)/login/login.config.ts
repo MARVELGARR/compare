@@ -12,6 +12,6 @@ export async function loginWithGoogle() {
     provider: OAuthProvider.Google,
     success: process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_OAUTH_SUCCESS_REDIRECT_DEV : process.env.NEXT_PUBLIC_OAUTH_FAILED_REDIRECT, // optional
     failure: process.env.NODE_ENV === "development" ? process.env.NEXT_PUBLIC_OAUTH_FAILED_REDIRECT_DEV : process.env.NEXT_PUBLIC_OAUTH_FAILED_REDIRECT, // optional
-    scopes: ["email", "profile"] // optional
+    scopes: ["openid", "email", "profile"] // optional
 });
 }
