@@ -108,6 +108,7 @@ const SignupForm = ({ className }: { className?: string }) => {
                 <Input
                   id="password"
                   type="password"
+                  placeholder="****"
                   {...form.register("password")}
                 />
                 {form.formState.errors.password && (
