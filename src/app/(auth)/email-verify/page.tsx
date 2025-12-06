@@ -2,14 +2,24 @@ import { Card } from "@/components/ui/card"
 import { CheckCircle, AlertCircle } from "lucide-react"
 import Link from "next/link"
 import { account } from "@/src/libs/appwrite"
+import { Metadata } from "next";
+
+
+
+export const metadata: Metadata = {
+  title: "Verify email",
+  description: "Verifying your email",
+};
+
 
 export default async function VerifyPage({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined }
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>
 }) {
-  const userId = searchParams.userId as string
-  const secret = searchParams.secret as string
+  const userId = (await searchParams).userId as string
+  const secret = (await searchParams).secret as string
+  
 
   let status: "success" | "error" = "error"
   let message = "Verification failed."
@@ -24,7 +34,7 @@ export default async function VerifyPage({
       status = "success"
       message = "Your email has been successfully verified."
     } catch (error: any) {
-      console.log("Verification error:", error)
+     
       message = error?.message || "The verification link is invalid or expired."
     }
   }
