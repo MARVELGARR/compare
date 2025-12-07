@@ -1,3 +1,6 @@
+
+
+"use client"
 import { createContext, ReactNode, useContext, useEffect, useState } from "react";
 import { account } from "../libs/appwrite";
 export interface Target {
