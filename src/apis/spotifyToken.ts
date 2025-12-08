@@ -11,8 +11,17 @@ export async function getSpotifyAccessToken() {
   }
 
   // Otherwise fetch new one
-  const clientId = process.env.SPOTIFY_CLIENT_ID!;
-  const clientSecret = process.env.SPOTIFY_CLIENT_SECRET!;
+  const sanitize = (val: string | undefined) => {
+    if (!val) return "";
+    let s = val.trim();
+    if ((s.startsWith('"') && s.endsWith('"')) || (s.startsWith("'") && s.endsWith("'"))) {
+      s = s.slice(1, -1);
+    }
+    return s;
+  };
+
+  const clientId = sanitize(process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID_DEV);
+  const clientSecret = sanitize(process.env.NEXT_PUBLIC_SPOTIFY_SECRET_DEV);
   const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const res = await fetch("https://accounts.spotify.com/api/token", {
