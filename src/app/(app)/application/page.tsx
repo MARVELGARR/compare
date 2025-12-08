@@ -1,4 +1,4 @@
-import ArtistTable from "./_applicationComponent/ArtistTable";
+import ArtistTable from "../../../components/application/ArtistTable";
 
 export default function Page() {
   return (

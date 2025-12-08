@@ -1,5 +1,6 @@
+'use client'
 "use client";
-import { QueryClient } from "@tanstack/react-query";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 import { ReactNode, useEffect, useState } from "react";
@@ -12,8 +13,6 @@ const queryClient = new QueryClient({
   },
 });
 
-
-
 export const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
   const [isMounted, setIsMounted] = useState(false);
 
@@ -23,9 +22,12 @@ export const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
 
   if (!isMounted) {
       return (
-    <div className="">{children}</div>
-  )
+        <QueryClientProvider client={queryClient}>
+            {children}
+        </QueryClientProvider>
+      )
   }
+
   const asyncStoragePersister = createAsyncStoragePersister({
     storage: window.localStorage,
   });
@@ -38,6 +40,4 @@ export const ReactQueryProvider = ({ children }: { children: ReactNode }) => {
         {children}
       </PersistQueryClientProvider>
     );
-
-
 };
