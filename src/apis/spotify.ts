@@ -1,12 +1,9 @@
+import { Market, RelatedArtist, SpotifyArtist, SpotifyArtistAlbumsResponse, SpotifyTracksResponse } from "./spotify.api.types";
 import { spotifyRequest } from "./spotify_request";
 
-export interface SpotifyArtist {
-  id: string;
-  name: string;
-  images: { url: string; height: number; width: number }[];
-  popularity: number;
-  genres: string[];
-}
+
+
+
 
 export interface SpotifyAlbum {
   id: string;
@@ -39,13 +36,8 @@ export interface ArtistRanking {
   trendData: number[]; // For sparkline
 }
 
-export async function getTrendingArtists(limit = 4, genre = "pop"): Promise<SpotifyArtist[]> {
-  const query = genre ? `genre:${encodeURIComponent(genre)}` : "genre:pop";
-  const data = await spotifyRequest<{ artists: { items: SpotifyArtist[] } }>(
-    `/search?q=${query}&type=artist&limit=${limit}`
-  );
-  return data.artists.items;
-}
+export type Include_Group = 'single' | 'album' | 'appears_on' | 'compilation'
+
 
 export async function getAfrobeatRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
   // If no genre is selected, we search for artists in the specific market with a broad query (e.g., year range or just broadly popular in market)
@@ -119,9 +111,9 @@ export async function getArtist(id: string): Promise<SpotifyArtist> {
   return await spotifyRequest<SpotifyArtist>(`/artists/${id}`);
 }
 
-export async function getArtistTopTracks(id: string, market = "NG"): Promise<any[]> {
-    const data = await spotifyRequest<{ tracks: any[] }>(`/artists/${id}/top-tracks?market=${market}`);
-    return data.tracks;
+export async function getArtistTopTracksByCountry(id: string, market = "NG"): Promise<SpotifyTracksResponse> {
+    const data = await spotifyRequest<SpotifyTracksResponse>(`/artists/${id}/top-tracks?market=${market}`);
+    return data;
 }
 
 export async function getTrendingAlbums(limit = 4): Promise<SpotifyAlbum[]> {
@@ -130,3 +122,24 @@ export async function getTrendingAlbums(limit = 4): Promise<SpotifyAlbum[]> {
     );
     return data.albums.items;
 }
+
+export async function getArtistAlbum(id: string, include_group: Include_Group, market: string, limit = 10, offset: number=5): Promise<SpotifyArtistAlbumsResponse>{
+  const data = await spotifyRequest<SpotifyArtistAlbumsResponse>(
+    `/artists/${id}/albums?include_groups=${include_group}&market=${market}&limit=${limit}&offset=${offset}`
+  )
+  return data
+}
+
+export async function getRelatedArtists(id: string): Promise<RelatedArtist>{
+    const data = await spotifyRequest<RelatedArtist>(
+      `/artists/${id}/related-artists`
+    )
+  return data
+}
+
+export async function getAvialableMarkets(): Promise<Market>{
+  const data =await spotifyRequest<Market>(
+    `/markets`
+  )
+  return data
+} 

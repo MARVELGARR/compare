@@ -1,6 +1,6 @@
 "use server";
 
-import { getAfrobeatRankings, getArtist, getArtistTopTracks } from "../../../apis/spotify";
+import { getAfrobeatRankings, getArtist,  getArtistTopTracksByCountry } from "../../../apis/spotify";
 
 export async function fetchAfrobeats(limit = 10, offset = 0, market = "NG", genre?: string | null) {
   return await getAfrobeatRankings(limit, offset, market, genre);
@@ -11,5 +11,5 @@ export async function fetchArtistDetails(id: string) {
 }
 
 export async function fetchArtistTopTracks(id: string, market = "NG") {
-  return await getArtistTopTracks(id, market);
+  return await getArtistTopTracksByCountry(id, market);
 }

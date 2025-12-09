@@ -72,7 +72,7 @@ export default function ArtistProfilePage() {
       <div className="max-w-4xl">
         <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><Disc className="w-6 h-6"/> Top Tracks</h2>
         <div className="grid gap-2">
-            {topTracks?.slice(0, 5).map((track: any, index: number) => (
+            {topTracks?.tracks.slice(0, 5).map((track: any, index: number) => (
                 <div key={track.id} className="flex items-center gap-4 p-3 rounded-md hover:bg-zinc-900/60 transition-colors group">
                     <div className="w-8 text-center text-zinc-500 font-mono">{index + 1}</div>
                     <div className="relative w-12 h-12 bg-zinc-800 rounded flex-shrink-0 overflow-hidden">
@@ -90,7 +90,7 @@ export default function ArtistProfilePage() {
                     </div>
                 </div>
             ))}
-            {!topTracks?.length && <div className="text-zinc-500 italic">No tracks available.</div>}
+            {!topTracks?.tracks.length && <div className="text-zinc-500 italic">No tracks available.</div>}
         </div>
       </div>
 
