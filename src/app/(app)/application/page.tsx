@@ -1,13 +1,14 @@
 import ArtistTable from "../../../components/application/ArtistTable";
-import { MarketSelector } from "./_applicationComponent/marketSelector";
 
 export default function Page() {
   return (
-    <div className="min-h-screen bg-background pr-4">
-          <h1 className="text-2xl font-bold text-white mb-2">Dashboard Overview</h1>
-          
-          <ArtistTable />
+    <div className="p-8">
+      <div className="mb-2 text-sm text-neutral-400">Welcome James!</div>
+      <h2 className="mb-8 text-3xl font-semibold text-white">Dashboard Overview</h2>
+
+      {/* Artist Rankings Table */}
+      <ArtistTable />
     </div>
-  )
+  );
 }
 
