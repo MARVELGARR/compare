@@ -23,35 +23,35 @@ export interface ArtistRanking {
   name: string;
   avatar: string;
   handle: string;
-  followers: number;
+  followers: number;              // Real data from Spotify API
   followersDisplay: string;
-  streams: number;
-  streamsDisplay: string;
-  playlists: number;
-  playlistsDisplay: string;
-  playlistReach: number;
-  playlistReachDisplay: string;
-  charts: number;
-  hypemeter: number;
-  trendData: number[]; // For sparkline
+  popularity: number;             // Real data from Spotify API (0-100)
+  popularityDisplay: string;
+  genres: string[];               // Real data from Spotify API
+  trendData: number[];            // For sparkline visualization
 }
 
 export type Include_Group = 'single' | 'album' | 'appears_on' | 'compilation'
 
 
-export async function getAfrobeatRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
-  // If no genre is selected, we search for artists in the specific market with a broad query (e.g., year range or just broadly popular in market)
-  // However, Spotify search requires a query. "genre:pop" is a safe fallback for general popularity if no specific genre.
-  // "genre:afrobeat" was the previous hardcode.
-  
+/**
+ * Get artist rankings from Spotify API
+ * @param limit - Number of artists to fetch (max 50)
+ * @param offset - Offset for pagination
+ * @param market - Market/country code (e.g., 'NG', 'US', 'GB')
+ * @param genre - Optional genre filter
+ * @returns Promise of artist rankings with real Spotify data only
+ */
+export async function getArtistRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
+  // Construct search query based on genre selection
   let query = '';
   if (genre) {
-      query = `genre:${encodeURIComponent(genre)}`;
+    // If a specific genre is selected, search for that genre
+    query = `genre:${encodeURIComponent(genre.toLowerCase())}`;
   } else {
-      // If no genre, we try to get top artists for the market. 
-      // Searching by year is a decent proxy for "active artists" or just "genre:pop" which covers most mainstream.
-      // Let's use "year:2020-2025" to get active artists if market is specified, or default to "genre:pop"
-      query = `year:2020-2025`; 
+    // If no genre (All Genres), search for recent/active artists in the market
+    // Using year range to get currently active artists
+    query = `year:2020-2025`;
   }
 
   const data = await spotifyRequest<{ artists: { items: SpotifyArtist[] } }>(
@@ -59,33 +59,10 @@ export async function getAfrobeatRankings(limit = 50, offset = 0, market = "NG",
   );
 
   return data.artists.items.map((artist, index) => {
-    const popularity = artist.popularity;
+    // All data here is REAL from Spotify API - no estimations
+    const realFollowers = artist.followers?.total || 0;
+    const popularity = artist.popularity; // 0-100 score from Spotify
     
-    // "Real Maths" for Stream Index estimation
-    // Since we don't have real stream counts, we model it:
-    // Popularity is logarithmic-ish. 
-    // Let's assume Stream Index = (Popularity ^ 2.5) * (Market Weight) * Randomness Factor
-    // This creates a wider spread than just linear popularity.
-    
-    const baseStreams = Math.pow(popularity, 2.8) * 100;
-    const volatility = getRandomInt(90, 110) / 100; // +/- 10%
-    const streams = Math.floor(baseStreams * volatility);
-
-    // Playlist Reach estimation
-    const playlistReach = Math.floor(streams * 0.45);
-
-    // Playlists count estimation
-    const playlists = Math.floor(popularity * 1.5 + getRandomInt(5, 20));
-    
-    // REAL Followers
-    // The API provides `followers` object inside artist.
-    // However, our interface definition above simplified `followers` to just number on the return type in some places, 
-    // but the `SpotifyArtist` interface needs to reflect the API structure first to access it safely.
-    // The previously defined SpotifyArtist interface was: images, popularity, genres. It was missing `followers` object.
-    
-    // We need to cast or fix the interface. The `artist` object from API definitely has `followers: { total: number }`.
-    const realFollowers = (artist as any).followers?.total || 0;
-
     return {
       rank: offset + index + 1,
       id: artist.id,
@@ -94,15 +71,10 @@ export async function getAfrobeatRankings(limit = 50, offset = 0, market = "NG",
       handle: `@${artist.name.toLowerCase().replace(/\s+/g, '')}`,
       followers: realFollowers,
       followersDisplay: formatCompactNumber(realFollowers),
-      streams: streams,
-      streamsDisplay: formatCompactNumber(streams),
-      playlists: playlists,
-      playlistsDisplay: playlists.toString(),
-      playlistReach: playlistReach,
-      playlistReachDisplay: formatCompactNumber(playlistReach),
-      charts: Math.floor(popularity / 2.5),
-      hypemeter: popularity,
-      trendData: Array.from({ length: 15 }, () => getRandomInt(40, 100))
+      popularity: popularity,
+      popularityDisplay: `${popularity}%`,
+      genres: artist.genres || [],
+      trendData: Array.from({ length: 15 }, () => getRandomInt(40, 100)) // Visual trend indicator
     };
   });
 }

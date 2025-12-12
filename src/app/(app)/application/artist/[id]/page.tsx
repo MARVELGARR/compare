@@ -1,11 +1,11 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
+import {  useQuery } from "@tanstack/react-query";
 import { useParams, useRouter } from "next/navigation";
-import { ArrowLeft, Music, Play, Disc } from "lucide-react";
+import { ArrowLeft,  Play, Disc } from "lucide-react";
 import Image from "next/image";
-import { Key, ReactElement, JSXElementConstructor, ReactNode, ReactPortal } from "react";
-import { fetchArtistDetails, fetchArtistTopTracks } from "../../actions";
+import { getArtist, getArtistTopTracksByCountry } from "@/src/apis/spotify";
+
 
 export default function ArtistProfilePage() {
   const { id } = useParams() as { id: string };
@@ -13,13 +13,16 @@ export default function ArtistProfilePage() {
 
   const { data: artist, isLoading: isArtistLoading } = useQuery({
     queryKey: ["artist", id],
-    queryFn: () => fetchArtistDetails(id),
+    queryFn: () => getArtist(id),
   });
 
   const { data: topTracks, isLoading: isTracksLoading } = useQuery({
     queryKey: ["artist-tracks", id],
-    queryFn: () => fetchArtistTopTracks(id),
+    queryFn: () => getArtistTopTracksByCountry(id),
   });
+
+
+
 
   if (isArtistLoading || isTracksLoading) {
     return <div className="text-white p-10 animate-pulse">Loading artist profile...</div>;
@@ -42,7 +45,13 @@ export default function ArtistProfilePage() {
       <div className="flex flex-col md:flex-row gap-8 items-end mb-12">
          <div className="w-48 h-48 md:w-60 md:h-60 rounded-full overflow-hidden border-4 border-zinc-800 shadow-2xl flex-shrink-0 relative">
              {artist.images[0] ? (
-                 <img src={artist.images[0].url} alt={artist.name} className="object-cover w-full h-full" />
+                 <Image 
+                   src={artist.images[0].url} 
+                   alt={artist.name} 
+                   width={240} 
+                   height={240} 
+                   className="object-cover w-full h-full" 
+                 />
              ) : (
                  <div className="w-full h-full bg-zinc-800 flex items-center justify-center"><p className="text-4xl font-bold">{artist.name[0]}</p></div>
              )}
@@ -76,14 +85,14 @@ export default function ArtistProfilePage() {
                 <div key={track.id} className="flex items-center gap-4 p-3 rounded-md hover:bg-zinc-900/60 transition-colors group">
                     <div className="w-8 text-center text-zinc-500 font-mono">{index + 1}</div>
                     <div className="relative w-12 h-12 bg-zinc-800 rounded flex-shrink-0 overflow-hidden">
-                        {track.album.images[0] && <img src={track.album.images[0].url} className="w-full h-full object-cover"/>}
+                        {track.album.images[0] && <Image src={track.album.images[0].url} width={48} height={48} className="w-full h-full object-cover" alt={"Track image"}/>}
                         <div className="absolute inset-0 bg-black/40 hidden group-hover:flex items-center justify-center">
                             <Play className="w-4 h-4 fill-white text-white"/>
                         </div>
                     </div>
                     <div className="flex-1 min-w-0">
                         <div className="font-bold truncate text-white">{track.name}</div>
-                         <div className="text-xs text-zinc-500 truncate">{track.artists.map((a:any) => a.name).join(', ')}</div>
+                         <div className="text-xs text-zinc-500 truncate">{track.artists.map((a: any) => a.name).join(', ')}</div>
                     </div>
                     <div className="text-zinc-400 text-sm hidden md:block w-32 text-right">
                          {Math.floor(track.duration_ms / 60000)}:{((track.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0')}

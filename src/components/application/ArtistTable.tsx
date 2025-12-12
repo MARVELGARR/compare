@@ -1,14 +1,14 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { fetchAfrobeats } from "../../app/(app)/application/actions";
+import { fetchArtistRankings } from "@/src/app/(app)/application/actions";
 import { ArrowDown, ArrowUp, Music2, Search, Filter, ChevronDown, Check } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
 import { useQueryState, parseAsString, parseAsStringLiteral } from "nuqs";
 import { useState } from "react";
 
-type SortField = 'rank' | 'followers' | 'streams' | 'playlists' | 'playlistReach' | 'charts' | 'hypemeter';
+type SortField = 'rank' | 'followers' | 'popularity';
 type SortOrder = 'asc' | 'desc';
 type Market = 'NG' | 'US' | 'GB' | 'GH' | 'ZA';
 
@@ -30,15 +30,15 @@ export default function ArtistTable() {
   // URL State with nuqs
   const [market, setMarket] = useQueryState<Market>('market', parseAsStringLiteral(['NG', 'US', 'GB', 'GH', 'ZA'] as const).withDefault('NG'));
   const [genre, setGenre] = useQueryState('genre', parseAsString.withDefault('')); // Empty string = "All/No Genre"
-  const [sortField, setSortField] = useQueryState<SortField>('sortBy', parseAsStringLiteral(['rank', 'followers', 'streams', 'playlists', 'playlistReach', 'charts', 'hypemeter'] as const).withDefault('streams')); // Default to streams as requested
+  const [sortField, setSortField] = useQueryState<SortField>('sortBy', parseAsStringLiteral(['rank', 'followers', 'popularity'] as const).withDefault('popularity')); // Default to popularity
   const [sortOrder, setSortOrder] = useQueryState<SortOrder>('order', parseAsStringLiteral(['asc', 'desc'] as const).withDefault('desc'));
 
   // Local state for UI
   const [isGenreOpen, setIsGenreOpen] = useState(false);
 
   const { data: artists, isLoading, error } = useQuery({
-    queryKey: ["afrobeat-rankings", market, genre], // Include genre in query key
-    queryFn: () => fetchAfrobeats(50, 0, market), // fetchAfrobeats needs to handle genre! We will update it.
+    queryKey: ["artist-rankings", market, genre],
+    queryFn: () => fetchArtistRankings(50, 0, market, genre),
   });
 
   const handleSort = (field: SortField) => {
@@ -149,21 +149,10 @@ export default function ArtistTable() {
             <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('followers')}>
                 <div className="flex items-center justify-end gap-1">Followers <SortIcon field="followers"/></div>
             </th>
-            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('streams')}>
-                 <div className="flex items-center justify-end gap-1">Streams <SortIcon field="streams"/></div>
+            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('popularity')}>
+                 <div className="flex items-center justify-end gap-1">Popularity <SortIcon field="popularity"/></div>
             </th>
-            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('playlists')}>
-                 <div className="flex items-center justify-end gap-1">Playlists <SortIcon field="playlists"/></div>
-            </th>
-            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('playlistReach')}>
-                 <div className="flex items-center justify-end gap-1">Reach <SortIcon field="playlistReach"/></div>
-            </th>
-            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('charts')}>
-                 <div className="flex items-center justify-end gap-1">Charts <SortIcon field="charts"/></div>
-            </th>
-            <th className="py-4 px-2 font-medium text-right cursor-pointer hover:text-white" onClick={() => handleSort('hypemeter')}>
-                 <div className="flex items-center justify-end gap-1">Hypemeter <SortIcon field="hypemeter"/></div>
-            </th>
+            <th className="py-4 px-2 font-medium">Genres</th>
           </tr>
         </thead>
         <tbody className="text-sm">
@@ -199,47 +188,31 @@ export default function ArtistTable() {
                     </div>
                 </td>
                 <td className="py-4 px-2 text-right">
-                    <div className="font-bold">{artist.streamsDisplay}</div>
-                     <div className={`text-xs flex items-center justify-end gap-1 ${Math.random() > 0.5 ? 'text-green-500' : 'text-red-500'}`}>
-                        {Math.random() > 0.5 ? <ArrowUp className="w-3 h-3"/> : <ArrowDown className="w-3 h-3"/>}
-                         {(Math.random() * 2).toFixed(2)}%
-                    </div>
-                </td>
-                <td className="py-4 px-2 text-right">
-                     <div className="font-bold">{artist.playlistsDisplay}</div>
-                      <div className="text-xs text-green-500 flex items-center justify-end gap-1">
-                        <ArrowUp className="w-3 h-3"/>
-                        {(Math.random() * 20).toFixed(0)}%
-                    </div>
-                </td>
-                <td className="py-4 px-2 text-right">
-                    <div className="font-bold">{artist.playlistReachDisplay}</div>
-                    <div className="text-xs text-green-500 flex items-center justify-end gap-1">
-                         <ArrowUp className="w-3 h-3"/>
-                         {(Math.random() * 3).toFixed(2)}%
-                    </div>
-                </td>
-                <td className="py-4 px-2 text-right">
-                    <div className="font-bold">{artist.charts}</div>
-                    <div className="text-xs text-green-500 flex items-center justify-end gap-1">
-                        <ArrowUp className="w-3 h-3"/>
-                         2
-                    </div>
-                </td>
-                <td className="py-4 px-2 text-right w-48">
                      <div className="flex items-center justify-end gap-2">
-                        {/* Simple Sparkline Mock */}
-                        <div className="h-8 w-24 flex items-end gap-[2px]">
+                        {/* Sparkline visualization */}
+                        <div className="h-8 w-20 flex items-end gap-[2px]">
                             {artist.trendData.map((val : any, i : any) => (
                                 <div 
                                     key={i} 
-                                    className={`w-full rounded-t-sm transition-all ${i === artist.trendData.length -1 ? 'bg-orange-500 animate-pulse' : 'bg-green-500/50'}`} 
+                                    className={`w-full rounded-t-sm transition-all ${i === artist.trendData.length -1 ? 'bg-green-500 animate-pulse' : 'bg-green-500/50'}`} 
                                     style={{height: `${val}%`}}
                                 ></div>
                             ))}
                         </div>
-                        <span className="font-bold text-lg text-orange-500">{artist.hypemeter}%</span>
+                        <span className="font-bold text-lg">{artist.popularityDisplay}</span>
                      </div>
+                </td>
+                <td className="py-4 px-2">
+                    <div className="flex flex-wrap gap-1">
+                        {artist.genres.slice(0, 3).map((genre) => (
+                            <span key={genre} className="px-2 py-0.5 bg-zinc-800 rounded text-xs text-zinc-400 capitalize">
+                                {genre}
+                            </span>
+                        ))}
+                        {artist.genres.length > 3 && (
+                            <span className="px-2 py-0.5 text-xs text-zinc-500">+{artist.genres.length - 3}</span>
+                        )}
+                    </div>
                 </td>
                 </tr>
             );
