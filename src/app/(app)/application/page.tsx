@@ -1,9 +1,13 @@
+import { account } from "@/src/libs/appwrite";
 import ArtistTable from "../../../components/application/ArtistTable";
 
-export default function Page() {
+export default async  function Page() {
+
+
+  const user = await account.get()
   return (
-    <div className="p-8">
-      <div className="mb-2 text-sm text-neutral-400">Welcome James!</div>
+    <div className="p-8 ">
+      <div className="mb-2 text-sm text-neutral-400">Welcome {user?.name}!</div>
       <h2 className="mb-8 text-3xl font-semibold text-white">Dashboard Overview</h2>
 
       {/* Artist Rankings Table */}

@@ -13,19 +13,21 @@ export const MarketSelector = () =>{
         queryKey: ["markets"],
         queryFn: ()=>getAvialableMarkets()
     },)
+
+
     return (
-        <div className=" text-foreground flex flex-col gap-2">
+        <div className=" text-secondary flex flex-col gap-2">
             <label className="" htmlFor="market">Country</label>
             <select 
             disabled={isLoading}
                 id="market"
                 defaultValue={currentMarket}
                 onChange={(e)=>setCurrentMarket(e.target.value)}
-                 className="bg-background border border-border text-xs rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-ring w-24"
+                 className="bg-background border border-border text-xs rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-ring w-28"
 
             >
+                {isLoading ? (<div className="w-full h-full flex item0center justify-center">Loading....</div>): (<></>)}
                 <option  value={"NG"}>All</option>
-                <option  value={"us"}>us</option>
                 {data?.markets.map((item)=>{
                     return(
                         <option key={item} value={item}>{item.toUpperCase()}</option>

@@ -11,6 +11,7 @@ import { Badge } from '@/components/ui/badge';
 import { Sliders, X } from 'lucide-react';
 import ComparisonMetrics from '@/src/components/application/ComparisonMetrics';
 import ArtistSearchPopover from '@/src/components/application/ArtistSearchPopover';
+import { MarketSelector } from '../_applicationComponent/marketSelector';
 
 
 export default function ComparePage() {
@@ -50,39 +51,50 @@ export default function ComparePage() {
   };
 
   return (
-    <div className="p-4 md:p-8">
+    <div className="p-4 md:p-8 relative">
+                      {/* Market selector */}
+      <div className=" absolute right-3 ">
+        
+        <MarketSelector/>
+      </div>
+
       <h2 className="mb-4 md:mb-6 text-2xl md:text-3xl font-semibold text-white">Artist Comparison</h2>
 
-      {/* Filters */}
-      <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
-        <Button
-          variant="outline"
-          size="sm"
-          className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
-        >
-          <Sliders className="h-4 w-4" />
-          <span className="hidden sm:inline">Filters</span>
-        </Button>
 
-        {["1d", "7d", "1m", "All"].map((filter) => (
+        {/* Filters */}
+        <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
           <Button
-            key={filter}
-            variant={timeFilter === filter ? "default" : "outline"}
+            variant="outline"
             size="sm"
-            className={`rounded-full ${
-              timeFilter === filter
-                ? "bg-white text-black hover:bg-neutral-100"
-                : "border-neutral-700 bg-transparent text-neutral-400 hover:bg-neutral-800 hover:text-white"
-            }`}
-            onClick={() => setTimeFilter(filter)}
+            className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
           >
-            {filter}
+            <Sliders className="h-4 w-4" />
+            <span className="hidden sm:inline">Filters</span>
           </Button>
-        ))}
-      </div>
+
+          {["1d", "7d", "1m", "All"].map((filter) => (
+            <Button
+              key={filter}
+              variant={timeFilter === filter ? "default" : "outline"}
+              size="sm"
+              className={`rounded-full ${
+                timeFilter === filter
+                  ? "bg-white text-black hover:bg-neutral-100"
+                  : "border-neutral-700 bg-transparent text-neutral-400 hover:bg-neutral-800 hover:text-white"
+              }`}
+              onClick={() => setTimeFilter(filter)}
+            >
+              {filter}
+            </Button>
+          ))}
+        </div>
+
+
 
       {/* Responsive Layout */}
       <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+        
+        
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
         <div className={`${selectedArtists.length >= 2 ? 'hidden lg:block' : 'block'} w-full lg:w-[400px] space-y-2 rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-3 md:p-4`}>
           <div className="mb-3 md:mb-4 flex items-center justify-between text-xs text-neutral-500">
@@ -132,9 +144,10 @@ export default function ComparePage() {
             )}
           </div>
         </div>
-
+            
         {/* Comparison Area */}
         <div className="flex-1 rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-4 md:p-6">
+          
           {/* Selected Artists */}
           <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
             <ArtistSearchPopover
