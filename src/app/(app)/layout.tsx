@@ -68,7 +68,7 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 h-full">{children}</main>
+            <main className="flex-1 h-full ">{children}</main>
           </div>
         </div>
       </div>

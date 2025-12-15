@@ -1,9 +1,14 @@
+'use client'
 import { Button } from "@/components/ui/button"
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
 import { useAuth } from "@/src/providers/authContext"
+import { useRouter } from "next/navigation"
 
 export default function DesktopHeader() {
-  const {User} = useAuth()
+
+  const router = useRouter()
+  const {User, logout, isAuthenticated} = useAuth()
+  const moveToLogin = () => router.push("/login")
    const initials = User?.name.split(" ").map(n => n[0]).slice(0,2).join("");
   return (
     <header className="border-b dark border-border bg-card w-full">
@@ -27,8 +32,8 @@ export default function DesktopHeader() {
 
           <div className="flex items-center gap-2 pl-4 border-l border-border">
             <div className="text-right text-sm">
-              <p className="text-foreground font-medium">{User?.name}</p>
-              <p className="text-muted-foreground text-xs">{User ? "sign out" : "sign in" }</p>
+              <p className="text-foreground font-medium">{User?.name || "Guest"}</p>
+              <Button onClick={isAuthenticated ? logout :  moveToLogin } className="text-muted-foreground text-xs p-0 h-0">{isAuthenticated ? "sign out" : "sign in" }</Button>
             </div>
             <Avatar className="w-10 h-10 text-foreground">
               <AvatarImage role="img" alt="profile pic" src="https://api.dicebear.com/7.x/avataaars/svg?seed=James" />

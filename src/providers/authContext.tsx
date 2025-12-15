@@ -35,14 +35,19 @@ export interface Target {
 type AuthContextType = {
     User: User | null
     isLoading: boolean
+    logout: ()=>void
+    isAuthenticated: boolean
 }
 
-const AuthContext = createContext<AuthContextType | null>({User: null, isLoading: false} )
+const AuthContext = createContext<AuthContextType | null>({User: null, isLoading: false, logout: ()=>{}, isAuthenticated: false} )
 
 
 export const UserSessionContext = ({children}: {children: ReactNode}) =>{
     const [User, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+
+
 
   useEffect(() => {
     account.get()
@@ -50,8 +55,11 @@ export const UserSessionContext = ({children}: {children: ReactNode}) =>{
       .catch(() => setUser(null))
       .finally(() => setIsLoading(false));
   }, []);
+
+    const logout = () => account.deleteSessions()
+    const  isAuthenticated = User && User !== null ? true : false
     return(
-        <AuthContext.Provider value={{User, isLoading}}>
+        <AuthContext.Provider value={{User, isLoading, logout, isAuthenticated}}>
             {children}
         </AuthContext.Provider>
     )

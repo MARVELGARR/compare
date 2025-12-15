@@ -16,7 +16,7 @@ export const MarketSelector = () =>{
 
 
     return (
-        <div className=" text-secondary flex flex-col gap-2">
+        <div className=" text-primary flex flex-col gap-2">
             <label className="" htmlFor="market">Country</label>
             <select 
             disabled={isLoading}

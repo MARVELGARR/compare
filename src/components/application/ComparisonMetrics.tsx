@@ -34,7 +34,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
   }));
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 ">
       {/* Followers Comparison */}
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-6">

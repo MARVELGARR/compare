@@ -10,6 +10,8 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Loader2 } from 'lucide-react';
 import { fetchArtistRankings } from '@/src/app/(app)/application/actions';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
+import { useQueryState } from 'nuqs';
+import { useSearchParams } from 'next/navigation';
 
 interface ArtistSearchPopoverProps {
   selectedArtists: SpotifyArtist[];
@@ -23,13 +25,20 @@ export default function ArtistSearchPopover({
   maxArtists = 4 
 }: ArtistSearchPopoverProps) {
   const [open, setOpen] = useState(false);
-  const [searchQuery, setSearchQuery] = useState('');
-  const [market, setMarket] = useState('NG');
+
+
+  const urlQuery = useSearchParams()
+  const defaultMarket = urlQuery.get("market")
+  const defaultSearch = urlQuery.get("search")
+  const [market] = useQueryState("market", {defaultValue: defaultMarket || "NG"})
+
+  const [searchQuery, setSearch] = useQueryState("search", {defaultValue: defaultSearch || "" }, )
+
 
   // Fetch artists based on search
   const { data: artists, isLoading } = useQuery({
     queryKey: ['artist-search', market, searchQuery],
-    queryFn: () => fetchArtistRankings(20, 0, market, searchQuery || null),
+    queryFn: () => fetchArtistRankings(10, 0, market, searchQuery || null),
     enabled: open, // Only fetch when popover is open
   });
 
@@ -42,16 +51,18 @@ export default function ArtistSearchPopover({
     return selectedArtists.some(a => a.id === artistId);
   };
 
+  
+
   return (
     <Popover open={open} onOpenChange={setOpen}>
       <PopoverTrigger asChild>
         <Button
           variant="outline"
           size="sm"
-          className="gap-2 rounded-full border-neutral-700 bg-transparent text-white hover:bg-neutral-800"
+          className="gap-2  rounded-full border-neutral-700 bg-transparent text-white hover:bg-secondary"
           disabled={selectedArtists.length >= maxArtists}
         >
-          <Plus className="h-4 w-4" />
+          <Plus className="h-4 w-4 group-hover:text-foreground" />
           Add Artists {selectedArtists.length > 0 && `(${selectedArtists.length}/${maxArtists})`}
         </Button>
       </PopoverTrigger>
@@ -62,13 +73,13 @@ export default function ArtistSearchPopover({
         <div className="p-4 space-y-4">
           {/* Search Header */}
           <div className="space-y-2">
-            <h4 className="font-semibold text-white">Search Artists</h4>
+            <h4 className="font-semibold text-white">Search Artists  <strong>{market}</strong> </h4>
             <div className="relative">
               <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-neutral-500" />
               <Input
                 placeholder="Search by name or genre..."
                 value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
+                onChange={(e) => setSearch(e.target.value)}
                 className="pl-9 bg-neutral-900 border-neutral-800 text-white placeholder:text-neutral-500"
               />
             </div>
@@ -76,7 +87,7 @@ export default function ArtistSearchPopover({
 
           {/* Market Filter */}
           <div className="flex gap-2">
-            {['NG', 'US', 'GB', 'GH', 'KE'].map((m) => (
+            {/* {['NG', 'US', 'GB', 'GH', 'KE'].map((m) => (
               <Button
                 key={m}
                 variant={market === m ? 'default' : 'outline'}
@@ -90,7 +101,7 @@ export default function ArtistSearchPopover({
               >
                 {m}
               </Button>
-            ))}
+            ))} */}
           </div>
 
           {/* Artist List */}

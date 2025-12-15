@@ -120,3 +120,8 @@
     @apply bg-gray-400 text-foreground min-h-screen ;
   }
 }
+
+@utility no-scrollbar {
+  scrollbar-width: none; /* Firefox */
+  &::-webkit-scrollbar { display: none; } /* Chrome, Safari, and Edge */
+}

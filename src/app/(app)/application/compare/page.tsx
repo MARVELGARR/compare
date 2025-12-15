@@ -12,16 +12,22 @@ import { Sliders, X } from 'lucide-react';
 import ComparisonMetrics from '@/src/components/application/ComparisonMetrics';
 import ArtistSearchPopover from '@/src/components/application/ArtistSearchPopover';
 import { MarketSelector } from '../_applicationComponent/marketSelector';
+import { useSearchParams } from 'next/navigation';
 
 
 export default function ComparePage() {
   const [selectedArtists, setSelectedArtists] = useState<SpotifyArtist[]>([]);
   const [timeFilter, setTimeFilter] = useState("All");
 
+
+  const urlQuery = useSearchParams()
+  const market = urlQuery.get("market") || "NG"
+  
+
   // Fetch default artist rankings for the list
   const { data: artists, isLoading } = useQuery({
-    queryKey: ["artist-rankings", "NG"],
-    queryFn: () => fetchArtistRankings(20, 0, "NG", null),
+    queryKey: ["artist-rankings", market],
+    queryFn: () => fetchArtistRankings(20, 0, market, null),
   });
 
   const handleAddArtist = (artist: any) => {
@@ -63,16 +69,16 @@ export default function ComparePage() {
 
         {/* Filters */}
         <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
-          <Button
+          {/* <Button
             variant="outline"
             size="sm"
             className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
           >
             <Sliders className="h-4 w-4" />
             <span className="hidden sm:inline">Filters</span>
-          </Button>
+          </Button> */}
 
-          {["1d", "7d", "1m", "All"].map((filter) => (
+          {/* {["1d", "7d", "1m", "All"].map((filter) => (
             <Button
               key={filter}
               variant={timeFilter === filter ? "default" : "outline"}
@@ -86,13 +92,13 @@ export default function ComparePage() {
             >
               {filter}
             </Button>
-          ))}
+          ))} */}
         </div>
 
 
 
       {/* Responsive Layout */}
-      <div className="flex flex-col lg:flex-row gap-4 md:gap-6">
+      <div className="flex flex-col  lg:flex-row gap-4 md:gap-6">
         
         
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
@@ -146,7 +152,7 @@ export default function ComparePage() {
         </div>
             
         {/* Comparison Area */}
-        <div className="flex-1 rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-4 md:p-6">
+        <div className="flex-1 overflow-y-auto no-scrollbar h-[calc(100vh-20rem)] rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-4 md:p-6">
           
           {/* Selected Artists */}
           <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
