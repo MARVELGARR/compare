@@ -42,12 +42,49 @@ export type Include_Group = 'single' | 'album' | 'appears_on' | 'compilation'
  * @param genre - Optional genre filter
  * @returns Promise of artist rankings with real Spotify data only
  */
-export async function getArtistRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
+
+export async function getArtistRankingsByGenre(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
   // Construct search query based on genre selection
   let query = '';
   if (genre) {
     // If a specific genre is selected, search for that genre
     query = `genre:${encodeURIComponent(genre.toLowerCase())}`;
+  } else {
+    // If no genre (All Genres), search for recent/active artists in the market
+    // Using year range to get currently active artists
+    query = `year:2020-2025`;
+  }
+
+  const data = await spotifyRequest<{ artists: { items: SpotifyArtist[] } }>(
+    `/search?q=${query}&type=artist&limit=${limit}&offset=${offset}&market=${market}`
+  );
+
+  return data.artists.items.map((artist, index) => {
+    // All data here is REAL from Spotify API - no estimations
+    const realFollowers = artist.followers?.total || 0;
+    const popularity = artist.popularity; // 0-100 score from Spotify
+    
+    return {
+      rank: offset + index + 1,
+      id: artist.id,
+      name: artist.name,
+      avatar: artist.images[0]?.url || "",
+      handle: `@${artist.name.toLowerCase().replace(/\s+/g, '')}`,
+      followers: realFollowers,
+      followersDisplay: formatCompactNumber(realFollowers),
+      popularity: popularity,
+      popularityDisplay: `${popularity}%`,
+      genres: artist.genres || [],
+      trendData: Array.from({ length: 15 }, () => getRandomInt(40, 100)) // Visual trend indicator
+    };
+  });
+}
+export async function getArtistRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
+  // Construct search query based on genre selection
+  let query = '';
+  if (genre) {
+    // If a specific genre is selected, search for that genre
+    query = `artist:${encodeURIComponent(genre.toLowerCase())}`;
   } else {
     // If no genre (All Genres), search for recent/active artists in the market
     // Using year range to get currently active artists
