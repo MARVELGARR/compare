@@ -11,7 +11,6 @@ import { Search, Plus, Loader2 } from 'lucide-react';
 import { fetchArtistRankings } from '@/src/app/(app)/application/actions';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
 import { useQueryState } from 'nuqs';
-import { useSearchParams } from 'next/navigation';
 
 interface ArtistSearchPopoverProps {
   selectedArtists: SpotifyArtist[];
@@ -27,18 +26,17 @@ export default function ArtistSearchPopover({
   const [open, setOpen] = useState(false);
 
 
-  const urlQuery = useSearchParams()
-  const defaultMarket = urlQuery.get("market")
-  const defaultSearch = urlQuery.get("search")
-  const [market] = useQueryState("market", {defaultValue: defaultMarket || "NG"})
+ 
+  const [market] = useQueryState("market", {defaultValue: "ALL" as string, clearOnDefault: true })
 
-  const [searchQuery, setSearch] = useQueryState("search", {defaultValue: defaultSearch || "" }, )
+  const [searchQuery, setSearch] = useQueryState("search", {defaultValue: ""  , clearOnDefault: true}
+  )
 
 
   // Fetch artists based on search
   const { data: artists, isLoading } = useQuery({
     queryKey: ['artist-search', market, searchQuery],
-    queryFn: () => fetchArtistRankings(10, 0, market, searchQuery || null),
+    queryFn: () => fetchArtistRankings(10, 0, market || "NG", searchQuery || null),
     enabled: open, // Only fetch when popover is open
   });
 

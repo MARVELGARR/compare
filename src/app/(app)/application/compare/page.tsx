@@ -13,6 +13,7 @@ import ComparisonMetrics from '@/src/components/application/ComparisonMetrics';
 import ArtistSearchPopover from '@/src/components/application/ArtistSearchPopover';
 import { MarketSelector } from '../_applicationComponent/marketSelector';
 import { useSearchParams } from 'next/navigation';
+import { ChartRadar, ChartRadarDots } from './_chart/chart';
 
 
 export default function ComparePage() {
@@ -191,7 +192,11 @@ export default function ComparePage() {
 
           {/* Comparison Content */}
           {selectedArtists.length >= 2 ? (
-            <ComparisonMetrics artists={selectedArtists} />
+            <>
+            <ComparisonMetrics artists={selectedArtists}/>
+            <ChartRadarDots artists={selectedArtists} />
+            <ChartRadar artists={selectedArtists} />
+            </>
           ) : selectedArtists.length === 1 ? (
             <div className="text-center py-16 md:py-24">
               <div className="text-neutral-500 mb-2 text-sm md:text-base">Add at least one more artist to start comparing</div>

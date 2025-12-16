@@ -7,7 +7,7 @@ import {useQueryState} from "nuqs"
 
 export const MarketSelector = () =>{
 
-    const [currentMarket, setCurrentMarket] = useQueryState("market", {defaultValue: "All"})
+    const [currentMarket, setCurrentMarket] = useQueryState("market", {defaultValue: "ALL", clearOnDefault: true})
 
     const {data, isLoading} = useQuery({
         queryKey: ["markets"],
@@ -26,8 +26,8 @@ export const MarketSelector = () =>{
                  className="bg-background border border-border text-xs rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-ring w-28"
 
             >
-                {isLoading ? (<div className="w-full h-full flex item0center justify-center">Loading....</div>): (<></>)}
-                <option  value={"NG"}>All</option>
+                {isLoading && <option disabled>Loading...</option>}
+                <option  value={"ALL"}>All</option>
                 {data?.markets.map((item)=>{
                     return(
                         <option key={item} value={item}>{item.toUpperCase()}</option>
