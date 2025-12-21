@@ -40,14 +40,14 @@ export function ChartRadarDots({ artists }: ComparisonMetricsProps) {
     }))
     
   return (
-    <Card className="bg-black">
+    <Card className="bg-zinc-900 border-zinc-900 text-zinc-500">
       <CardHeader className="items-center ">
         <CardTitle>Popularity Comparison</CardTitle>
         <CardDescription>
           Comparing popularity scores (0-100)
         </CardDescription>
       </CardHeader>
-      <CardContent className="pb-0  bg-black">
+      <CardContent className="pb-0  ">
         <ChartContainer
           config={chartConfig}
           className="mx-auto aspect-square max-h-[250px]"
@@ -96,7 +96,7 @@ export function ChartRadar({ artists }: ComparisonMetricsProps) {
     , [chartData]);
     
   return (
-   <Card className="flex flex-col bg-black border-zinc-800">
+   <Card className="flex flex-col bg-zinc-900 border-zinc-800 text-zinc-500">
       <CardHeader className="items-center pb-0">
         <CardTitle>Popularity Distribution</CardTitle>
         <CardDescription>Relative popularity share</CardDescription>

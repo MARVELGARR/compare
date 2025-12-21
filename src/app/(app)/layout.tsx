@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, Sparkles, Tag, Users, LayoutGrid } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { HeaderContainer } from "./_LayoutComponents/Headers/HeaderComponent";
+import { HeaderContainer, NavContextProvider } from "./_LayoutComponents/Headers/HeaderComponent";
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();
@@ -14,11 +14,16 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const isComparison = pathname?.includes("/compare");
 
   return (
-    <div className="h-screen bg-[#a8cfc4] p-4 md:p-8">
-      <div className="mx-auto max-w-[1400px] h-full">
-        <div className="overflow-hidden rounded-3xl bg-[#0a0a0a] shadow-2xl h-full">
+    <div className="h-screen bg-[#a8cfc4] p-4 md:p-8 ">
+      <div className="mx-auto max-w-[1400px] h-full relative">
+        
+        <div className="overflow-hidden rounded-3xl bg-[#0a0a0a] shadow-2xl h-full ">
           {/* Header - Using your original auth header */}
-          <HeaderContainer />
+
+          <NavContextProvider>
+
+            <HeaderContainer />
+          </NavContextProvider>
 
           {/* Sidebar + Content */}
           <div className="flex h-full">

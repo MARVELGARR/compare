@@ -14,6 +14,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
   const followers = artists.map(a => a.followers?.total || 0);
   const popularity = artists.map(a => a.popularity || 0);
   
+  
   const maxFollowers = Math.max(...followers);
   const maxPopularity = Math.max(...popularity);
 

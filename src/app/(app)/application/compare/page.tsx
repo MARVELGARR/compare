@@ -14,6 +14,7 @@ import ArtistSearchPopover from '@/src/components/application/ArtistSearchPopove
 import { MarketSelector } from '../_applicationComponent/marketSelector';
 import { useSearchParams } from 'next/navigation';
 import { ChartRadar, ChartRadarDots } from './_chart/chart';
+import { ChartLineTopTracks } from './_chart/line-chart';
 
 
 export default function ComparePage() {
@@ -23,7 +24,7 @@ export default function ComparePage() {
 
   const urlQuery = useSearchParams()
   const market = urlQuery.get("market") || "NG"
-  
+
 
   // Fetch default artist rankings for the list
   const { data: artists, isLoading } = useQuery({
@@ -33,7 +34,7 @@ export default function ComparePage() {
 
   const handleAddArtist = (artist: any) => {
     if (selectedArtists.length >= 4) return;
-    
+
     // Convert to SpotifyArtist format
     const spotifyArtist: SpotifyArtist = {
       id: artist.id,
@@ -47,7 +48,7 @@ export default function ComparePage() {
       type: "artist",
       uri: `spotify:artist:${artist.id}`,
     };
-    
+
     if (!selectedArtists.find(a => a.id === artist.id)) {
       setSelectedArtists([...selectedArtists, spotifyArtist]);
     }
@@ -59,18 +60,18 @@ export default function ComparePage() {
 
   return (
     <div className="p-4 md:p-8 relative">
-                      {/* Market selector */}
+      {/* Market selector */}
       <div className=" absolute right-3 ">
-        
-        <MarketSelector/>
+
+        <MarketSelector />
       </div>
 
-      <h2 className="mb-4 md:mb-6 text-2xl md:text-3xl font-semibold text-white">Artist Comparison</h2>
+      <h2 className="mb-4 md:mb-6 tit  font-semibold text-white">Artist Comparison</h2>
 
 
-        {/* Filters */}
-        <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
-          {/* <Button
+      {/* Filters */}
+      <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
+        {/* <Button
             variant="outline"
             size="sm"
             className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
@@ -79,7 +80,7 @@ export default function ComparePage() {
             <span className="hidden sm:inline">Filters</span>
           </Button> */}
 
-          {/* {["1d", "7d", "1m", "All"].map((filter) => (
+        {/* {["1d", "7d", "1m", "All"].map((filter) => (
             <Button
               key={filter}
               variant={timeFilter === filter ? "default" : "outline"}
@@ -94,14 +95,14 @@ export default function ComparePage() {
               {filter}
             </Button>
           ))} */}
-        </div>
+      </div>
 
 
 
       {/* Responsive Layout */}
       <div className="flex flex-col  lg:flex-row gap-4 md:gap-6">
-        
-        
+
+
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
         <div className={`${selectedArtists.length >= 2 ? 'hidden lg:block' : 'block'} w-full lg:w-[400px] space-y-2 rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-3 md:p-4`}>
           <div className="mb-3 md:mb-4 flex items-center justify-between text-xs text-neutral-500">
@@ -136,13 +137,12 @@ export default function ComparePage() {
                   </div>
 
                   <Badge
-                    className={`min-w-[40px] md:min-w-[50px] justify-center rounded-md border-0 font-bold text-xs ${
-                      artist.popularity >= 80
-                        ? "bg-orange-600/20 text-orange-500"
-                        : artist.popularity >= 60
-                          ? "bg-amber-600/20 text-amber-500"
-                          : "bg-green-600/20 text-green-500"
-                    }`}
+                    className={`min-w-[40px] md:min-w-[50px] justify-center rounded-md border-0 font-bold text-xs ${artist.popularity >= 80
+                      ? "bg-orange-600/20 text-orange-500"
+                      : artist.popularity >= 60
+                        ? "bg-amber-600/20 text-amber-500"
+                        : "bg-green-600/20 text-green-500"
+                      }`}
                   >
                     {artist.popularity}%
                   </Badge>
@@ -151,10 +151,15 @@ export default function ComparePage() {
             )}
           </div>
         </div>
-            
+
+
+
+
+
+
         {/* Comparison Area */}
         <div className="flex-1 overflow-y-auto no-scrollbar h-[calc(100vh-20rem)] rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-4 md:p-6">
-          
+
           {/* Selected Artists */}
           <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
             <ArtistSearchPopover
@@ -193,9 +198,13 @@ export default function ComparePage() {
           {/* Comparison Content */}
           {selectedArtists.length >= 2 ? (
             <>
-            <ComparisonMetrics artists={selectedArtists}/>
-            <ChartRadarDots artists={selectedArtists} />
-            <ChartRadar artists={selectedArtists} />
+              <ComparisonMetrics artists={selectedArtists} />
+              <div className="flex flex-col gap-6 mt-5 ">
+                <ChartLineTopTracks artists={selectedArtists} market={market} />
+                <ChartRadarDots artists={selectedArtists} />
+                <ChartRadar artists={selectedArtists} />
+              </div>
+
             </>
           ) : selectedArtists.length === 1 ? (
             <div className="text-center py-16 md:py-24">
