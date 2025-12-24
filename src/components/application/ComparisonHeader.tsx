@@ -15,11 +15,11 @@ export default function ComparisonHeader({ artists, onRemoveArtist }: Comparison
   return (
     <div className="w-full">
       <div className="text-center mb-8">
-        <h1 className="text-3xl md:text-4xl font-bold text-white mb-2">Artist Comparison</h1>
+        <h2 className="tit font-bold text-white mb-2">Artist Comparison</h2>
         <p className="text-zinc-500">Compare stats and metrics across {artists.length} artists</p>
       </div>
 
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mb-8">
         {artists.map((artist, index) => (
           <div key={artist.id} className="relative">
             <div className="bg-gradient-to-br from-zinc-900 to-zinc-950 border border-zinc-800 rounded-xl p-6 text-center hover:border-green-500/50 transition-all">
@@ -54,7 +54,7 @@ export default function ComparisonHeader({ artists, onRemoveArtist }: Comparison
               </div>
 
               <h3 className="font-bold text-white text-lg mb-1 truncate">{artist.name}</h3>
-              
+
               <div className="flex flex-wrap gap-1 justify-center mb-3">
                 {artist.genres?.slice(0, 2).map((genre) => (
                   <span

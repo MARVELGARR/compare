@@ -10,12 +10,9 @@ export default async function Page() {
 
 
   return (
-    <div className="p-8 tit overflow-y-auto  h-[calc(100vh-200px)] no-scrollbar">
-
-
-
-      <div className="mb-2  text-neutral-400">Welcome {"Guest"}!</div>
-      <h2 className="mb-8  font-semibold text-white">Dashboard Overview</h2>
+    <div className="p-4 md:p-8 overflow-y-auto h-full no-scrollbar">
+      <div className="mb-2 text-sm md:text-base text-neutral-400">Welcome {"Guest"}!</div>
+      <h1 className="tit font-semibold text-white mb-8">Dashboard Overview</h1>
 
       {/* Artist Rankings Table */}
       <ArtistTable />

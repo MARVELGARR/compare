@@ -129,7 +129,7 @@
   }
 }
 .tit{
-  font-size: clamp(1rem, 2vw, 5rem)
+  font-size: clamp(2rem, 8vw, 4.5rem);
 }
 @layer base {
   * {

@@ -18,18 +18,18 @@ interface ArtistSearchPopoverProps {
   maxArtists?: number;
 }
 
-export default function ArtistSearchPopover({ 
-  selectedArtists, 
+export default function ArtistSearchPopover({
+  selectedArtists,
   onAddArtist,
-  maxArtists = 4 
+  maxArtists = 4
 }: ArtistSearchPopoverProps) {
   const [open, setOpen] = useState(false);
 
 
- 
-  const [market] = useQueryState("market", {defaultValue: "ALL" as string, clearOnDefault: true })
 
-  const [searchQuery, setSearch] = useQueryState("search", {defaultValue: ""  , clearOnDefault: true}
+  const [market] = useQueryState("market", { defaultValue: "ALL" as string, clearOnDefault: true })
+
+  const [searchQuery, setSearch] = useQueryState("search", { defaultValue: "", clearOnDefault: true }
   )
 
 
@@ -49,7 +49,7 @@ export default function ArtistSearchPopover({
     return selectedArtists.some(a => a.id === artistId);
   };
 
-  
+
 
   return (
     <Popover open={open} onOpenChange={setOpen}>
@@ -64,8 +64,8 @@ export default function ArtistSearchPopover({
           Add Artists {selectedArtists.length > 0 && `(${selectedArtists.length}/${maxArtists})`}
         </Button>
       </PopoverTrigger>
-      <PopoverContent 
-        className="w-[400px] p-0 bg-[#0d0d0d] border-neutral-800" 
+      <PopoverContent
+        className="w-[calc(100vw-2rem)] sm:w-[400px] p-0 bg-[#0d0d0d] border-neutral-800"
         align="start"
       >
         <div className="p-4 space-y-4">
@@ -116,11 +116,10 @@ export default function ArtistSearchPopover({
                     key={artist.id}
                     onClick={() => !selected && handleAddArtist(artist)}
                     disabled={selected}
-                    className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${
-                      selected
+                    className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${selected
                         ? 'bg-neutral-800/50 opacity-50 cursor-not-allowed'
                         : 'hover:bg-neutral-800/50 cursor-pointer'
-                    }`}
+                      }`}
                   >
                     <Avatar className="h-10 w-10">
                       {artist.avatar ? (
@@ -136,13 +135,12 @@ export default function ArtistSearchPopover({
                     </div>
 
                     <Badge
-                      className={`min-w-[50px] justify-center rounded-md border-0 font-bold text-xs ${
-                        artist.popularity >= 80
+                      className={`min-w-[50px] justify-center rounded-md border-0 font-bold text-xs ${artist.popularity >= 80
                           ? 'bg-orange-600/20 text-orange-500'
                           : artist.popularity >= 60
                             ? 'bg-amber-600/20 text-amber-500'
                             : 'bg-green-600/20 text-green-500'
-                      }`}
+                        }`}
                     >
                       {artist.popularity}%
                     </Badge>

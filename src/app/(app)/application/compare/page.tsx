@@ -59,14 +59,13 @@ export default function ComparePage() {
   };
 
   return (
-    <div className="p-4 md:p-8 relative">
-      {/* Market selector */}
-      <div className=" absolute right-3 ">
-
+    <div className="p-4 md:p-8 relative h-full overflow-hidden flex flex-col">
+      {/* Market selector - Adjusted for mobile */}
+      <div className="absolute right-4 top-4 md:right-8 md:top-8 z-10">
         <MarketSelector />
       </div>
 
-      <h2 className="mb-4 md:mb-6 tit  font-semibold text-white">Artist Comparison</h2>
+      <h1 className="tit font-semibold text-white mb-6 md:mb-10">Artist Comparison</h1>
 
 
       {/* Filters */}
@@ -100,7 +99,7 @@ export default function ComparePage() {
 
 
       {/* Responsive Layout */}
-      <div className="flex flex-col  lg:flex-row gap-4 md:gap-6">
+      <div className="flex flex-col  overflow-y-auto  lg:flex-row gap-4 md:gap-6">
 
 
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}

@@ -14,9 +14,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
   const isComparison = pathname?.includes("/compare");
 
   return (
-    <div className="h-screen bg-[#a8cfc4] p-4 md:p-8 ">
+    <div className="h-[100dvh] bg-[#a8cfc4] p-2 md:p-8 ">
       <div className="mx-auto max-w-[1400px] h-full relative">
-        
+
         <div className="overflow-hidden rounded-3xl bg-[#0a0a0a] shadow-2xl h-full ">
           {/* Header - Using your original auth header */}
 
@@ -26,9 +26,9 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
           </NavContextProvider>
 
           {/* Sidebar + Content */}
-          <div className="flex h-full">
+          <div className="flex h-full overflow-hidden">
             {/* Sidebar */}
-            <aside className="flex w-16 flex-col items-center gap-4 border-r border-neutral-800 py-8">
+            <aside className="hidden lg:flex w-16 flex-col items-center gap-4 border-r border-neutral-800 py-8 flex-shrink-0">
               <Button
                 size="icon"
                 variant={isOverview ? "default" : "ghost"}

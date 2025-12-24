@@ -13,8 +13,8 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
   // Calculate metrics
   const followers = artists.map(a => a.followers?.total || 0);
   const popularity = artists.map(a => a.popularity || 0);
-  
-  
+
+
   const maxFollowers = Math.max(...followers);
   const maxPopularity = Math.max(...popularity);
 
@@ -24,7 +24,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
     acc[genre] = (acc[genre] || 0) + 1;
     return acc;
   }, {} as Record<string, number>);
-  
+
   const commonGenres = Object.entries(genreCounts)
     .filter(([_, count]) => count > 1)
     .map(([genre]) => genre);
@@ -40,7 +40,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-6">
           <Users className="w-5 h-5 text-green-500" />
-          <h3 className="text-xl font-bold text-white">Followers</h3>
+          <h3 className="text-xl font-bold text-white uppercase tracking-wider" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>Followers</h3>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -52,7 +52,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
             return (
               <div key={artist.id} className="space-y-2">
                 <div className="text-sm text-zinc-500 truncate">{artist.name}</div>
-                <div className={`text-2xl font-bold ${isMax ? 'text-green-500' : 'text-white'}`}>
+                <div className={`font-bold ${isMax ? 'text-green-500' : 'text-white'}`} style={{ fontSize: 'clamp(1.25rem, 5vw, 1.875rem)' }}>
                   {Intl.NumberFormat('en-US', { notation: 'compact', maximumFractionDigits: 1 }).format(followerCount)}
                 </div>
                 <div className="w-full bg-zinc-800 rounded-full h-2 overflow-hidden">
@@ -82,7 +82,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
       <div className="bg-zinc-900 border border-zinc-800 rounded-xl p-6">
         <div className="flex items-center gap-2 mb-6">
           <TrendingUp className="w-5 h-5 text-purple-500" />
-          <h3 className="text-xl font-bold text-white">Popularity Score</h3>
+          <h3 className="text-xl font-bold text-white uppercase tracking-wider" style={{ fontSize: 'clamp(1rem, 3vw, 1.25rem)' }}>Popularity Score</h3>
         </div>
 
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -93,7 +93,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
             return (
               <div key={artist.id} className="space-y-2">
                 <div className="text-sm text-zinc-500 truncate">{artist.name}</div>
-                <div className={`text-3xl font-bold ${isMax ? 'text-purple-500' : 'text-white'}`}>
+                <div className={`font-bold ${isMax ? 'text-purple-500' : 'text-white'}`} style={{ fontSize: 'clamp(1.5rem, 6vw, 2.25rem)' }}>
                   {score}%
                 </div>
                 <div className="w-full bg-zinc-800 rounded-full h-2 overflow-hidden">
