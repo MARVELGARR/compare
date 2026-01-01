@@ -37,7 +37,7 @@ export const NavContextProvider = ({ children }: { children: ReactNode }) => {
     return (
         <NavContext.Provider value={{ isOpen, handleIsOpen }}>
 
-            {isOpen && <div className="w-full h-full rounded-xl z-10 absolute left-0 top-0 bottom-0 right-0 bg-black opacity-50"></div>}
+            {isOpen && <div className="w-full lg:hidden h-full rounded-xl z-10 absolute left-0 top-0 bottom-0 right-0 bg-black opacity-50"></div>}
 
             {children}
         </NavContext.Provider>
@@ -60,7 +60,7 @@ export const HeaderContainer = () => {
     const { handleIsOpen, isOpen } = useNav()
 
     return (
-        <div className="w-full flex item-center justify-between ">
+        <div className="w-full flex item-center justify-between  relative ">
             <div className="w-full hidden lg:block">
 
                 <DesktopHeader />
@@ -68,7 +68,7 @@ export const HeaderContainer = () => {
             <MenuIcon onClick={handleIsOpen} className="absolute lg:hidden right-8 top-14 w-6 h-6 text-secondary" />
 
             <div className="">
-                {isOpen && (<MobileHeader className=" bg-zinc-900 border-l border-zinc-800 text-white transition-all shadow-2xl " />)}
+                {isOpen && (<MobileHeader className="  bg-zinc-900 border-l border-zinc-800 text-white transition-all shadow-2xl " />)}
             </div>
         </div>
     )
@@ -102,7 +102,7 @@ export const MobileHeader = ({ className }: { className?: string }) => {
 
     const { handleIsOpen } = useNav()
     return (
-        <div className={cn("h-full w-[280px] sm:w-[350px] z-[100] fixed right-0 top-0 bottom-0", className)}>
+        <div className={cn("h-full w-[280px] sm:w-[350px] z-[100] fixed lg:hidden right-0 top-0 bottom-0", className)}>
 
             <div className="p-6 flex flex-col h-full">
                 <div className="flex items-center justify-between mb-10">

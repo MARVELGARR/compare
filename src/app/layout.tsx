@@ -5,6 +5,7 @@ import { ReactQueryProvider } from "../providers/react_query";
 import { Toaster } from "@/components/ui/sonner"
 import { UserSessionContext } from "../providers/authContext";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
+import { NavContextProvider } from "./(app)/_LayoutComponents/Headers/HeaderComponent";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -32,16 +33,19 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <NuqsAdapter>
-        <ReactQueryProvider>
-          <UserSessionContext>
+          <ReactQueryProvider>
+            <UserSessionContext>
+              <NavContextProvider>
 
-              <Toaster/>
-              <div className="h-full">
 
-            {children}  
-              </div>
-          </UserSessionContext>
-        </ReactQueryProvider>
+                <Toaster />
+                <div className="h-full ">
+
+                  {children}
+                </div>
+              </NavContextProvider>
+            </UserSessionContext>
+          </ReactQueryProvider>
         </NuqsAdapter>
       </body>
     </html>

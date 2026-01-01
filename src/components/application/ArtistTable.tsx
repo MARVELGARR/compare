@@ -41,6 +41,7 @@ import {
   FormField,
   FormItem,
 } from "@/src/components/ui/form";
+import { ScrollArea, ScrollBar } from "@/src/components/ui/scroll-area";
 
 
 // Zod Schema Definition
@@ -123,7 +124,7 @@ export default function ArtistTable() {
             <Button
               variant="ghost"
               onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-              className="hover:bg-transparent pl-0 text-zinc-400 hover:text-white"
+              className="hover:bg-transparent pl-0 text-zinc-400 hover:text-white res_font"
             >
               #
               {column.getIsSorted() === "asc" ? <ArrowUp className="ml-2 h-4 w-4" /> : column.getIsSorted() === "desc" ? <ArrowDown className="ml-2 h-4 w-4" /> : <div className="ml-2 h-4 w-4 opacity-20"><ArrowDown className="w-4 h-4" /></div>}
@@ -134,9 +135,22 @@ export default function ArtistTable() {
       },
       {
         accessorKey: "name",
-        header: "Artist",
+        header: ({ column }) => {
+          return (
+            <div className="text-right">
+              <Button
+                variant="ghost"
+
+                className="hover:bg-transparent res_font pr-0 text-zinc-400 hover:text-white"
+              >
+                Artist
+
+              </Button>
+            </div>
+          )
+        },
         cell: ({ row }) => (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 res_font">
             <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-md overflow-hidden bg-zinc-800 flex-shrink-0">
               {row.original.avatar ? (
                 <img src={row.original.avatar} alt={row.original.name} className="object-cover w-full h-full" />
@@ -144,7 +158,7 @@ export default function ArtistTable() {
                 <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">?</div>
               )}
             </div>
-            <div>
+            <div className="res_font">
               <div className="font-bold text-white text-sm md:text-base lg:text-lg" style={{ fontSize: 'clamp(0.875rem, 2vw + 0.5rem, 1.125rem)' }}>{row.original.name}</div>
               <div className="text-zinc-500 text-[10px] md:text-xs">{row.original.handle}</div>
             </div>
@@ -159,7 +173,7 @@ export default function ArtistTable() {
               <Button
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                className="hover:bg-transparent pr-0 text-zinc-400 hover:text-white"
+                className="hover:bg-transparent res_font pr-0 text-zinc-400 hover:text-white"
               >
                 Followers
                 {column.getIsSorted() === "asc" ? <ArrowUp className="ml-2 h-4 w-4" /> : column.getIsSorted() === "desc" ? <ArrowDown className="ml-2 h-4 w-4" /> : <div className="ml-2 h-4 w-4 opacity-20"><ArrowDown className="w-4 h-4" /></div>}
@@ -188,7 +202,7 @@ export default function ArtistTable() {
               <Button
                 variant="ghost"
                 onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                className="hover:bg-transparent pr-0 text-zinc-400 hover:text-white"
+                className="hover:bg-transparent res_font pr-0 text-zinc-400 hover:text-white res_font"
               >
                 Popularity
                 {column.getIsSorted() === "asc" ? <ArrowUp className="ml-2 h-4 w-4" /> : column.getIsSorted() === "desc" ? <ArrowDown className="ml-2 h-4 w-4" /> : <div className="ml-2 h-4 w-4 opacity-20"><ArrowDown className="w-4 h-4" /></div>}
@@ -197,7 +211,7 @@ export default function ArtistTable() {
           )
         },
         cell: ({ row }) => (
-          <div className="flex items-center justify-end gap-2 text-white">
+          <div className="flex items-center justify-end gap-2 text-white res_font">
             <div className="h-8 w-20 flex items-end gap-[2px]">
               {row.original.trendData.map((val: any, i: any) => (
                 <div
@@ -213,11 +227,25 @@ export default function ArtistTable() {
       },
       {
         accessorKey: "genres",
-        header: "Genres",
+        header: ({ column }) => {
+          return (
+
+            <div className="text-right">
+              <Button
+                variant="ghost"
+                onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                className="hover:bg-transparent res_font pr-0 text-zinc-400 hover:text-white"
+              >
+                Genres
+                {column.getIsSorted() === "asc" ? <ArrowUp className="ml-2 h-4 w-4" /> : column.getIsSorted() === "desc" ? <ArrowDown className="ml-2 h-4 w-4" /> : <div className="ml-2 h-4 w-4 opacity-20"><ArrowDown className="w-4 h-4" /></div>}
+              </Button>
+            </div>
+          )
+        },
         cell: ({ row }) => (
-          <div className="flex flex-wrap gap-1">
+          <div className="flex flex-wrap gap-1 res_font">
             {row.original.genres.slice(0, 3).map((genre) => (
-              <span key={genre} className="px-2 py-0.5 bg-zinc-800 rounded text-xs text-zinc-400 capitalize text-white">
+              <span key={genre} className="px-2 py-0.5 bg-zinc-800 res_font rounded res_font text-zinc-400 capitalize text-white">
                 {genre}
               </span>
             ))}
@@ -255,15 +283,15 @@ export default function ArtistTable() {
     if (page > 1) setPage(page - 1);
   };
 
-  if (isLoading) return <div className="text-white p-8 animate-pulse">Loading rankings for {MARKETS.find(m => m.code === formValues.market)?.name}...</div>;
-  if (error) return <div className="text-red-500 p-8">Error loading data.</div>;
+  // if (isLoading) return <div className="text-white p-8 animate-pulse">Loading rankings for {MARKETS.find(m => m.code === formValues.market)?.name}...</div>;
+  // if (error) return <div className="text-red-500 p-8">Error loading data.</div>;
 
   return (
-    <div className="w-full text-white font-sans mt-4">
+    <div className="w-full h-full flex flex-col text-white font-sans mt-4 min-h-0 min-w-0">
       {/* Filters form group */}
       <Form {...form}>
-        <form className="w-full">
-          <div className="flex flex-col lg:flex-row items-start lg:items-center justify-between mb-6 gap-6 md:gap-4">
+        <form className="w-full res-font">
+          <div className="flex flex-col lg:overflow-x-auto lg:flex-row items-start lg:items-center justify-between mb-6 gap-6 md:gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
               {/* Genre Dropdown */}
               <FormField
@@ -295,43 +323,51 @@ export default function ArtistTable() {
               />
 
               {/* Market Selector */}
-              <div className="bg-zinc-800 rounded-full p-1 flex items-center text-xs overflow-x-auto max-w-full no-scrollbar">
-                <FormField
-                  control={control}
-                  name="market"
-                  render={({ field }) => (
-                    <div className="flex">
-                      {MARKETS.map((m) => (
-                        <button
-                          key={m.code}
-                          type="button"
-                          onClick={() => field.onChange(m.code)}
-                          className={`flex-shrink-0 px-4 py-1.5 rounded-full cursor-pointer transition-colors whitespace-nowrap ${field.value === m.code ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}
-                        >
-                          {m.name}
-                        </button>
-                      ))}
-                    </div>
-                  )}
-                />
-              </div>
+              <ScrollArea className="w-full lg:w-auto">
+                <div className="bg-zinc-800 rounded-full p-1 flex items-center text-xs">
+                  <FormField
+                    control={control}
+                    name="market"
+                    render={({ field }) => (
+                      <div className="flex">
+                        {MARKETS.map((m) => (
+                          <button
+                            key={m.code}
+                            type="button"
+                            onClick={() => field.onChange(m.code)}
+                            className={`flex-shrink-0 px-4 py-1.5 rounded-full cursor-pointer transition-colors whitespace-nowrap ${field.value === m.code ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}
+                          >
+                            {m.name}
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  />
+                </div>
+                <ScrollBar orientation="horizontal" />
+              </ScrollArea>
             </div>
 
-            <div className="w-full lg:w-auto flex items-center gap-2 overflow-x-auto pb-2 lg:pb-0 no-scrollbar">
-              <Button type="button" variant="secondary" className="rounded-full bg-white text-black h-8 font-medium hover:bg-gray-100" onClick={() => handlePlatformClick('Spotify')}>
-                <span className="text-green-500"><Music2 className="w-3 h-3 fill-current" /></span> Spotify
-              </Button>
-              {['Instagram', 'Youtube', 'SoundCloud', 'Apple Music'].map(platform => (
-                <Button
-                  key={platform}
-                  type="button"
-                  variant="outline"
-                  onClick={() => handlePlatformClick(platform)}
-                  className="rounded-full border-zinc-700 text-zinc-300 h-8 hover:bg-zinc-800 hover:text-white bg-transparent"
-                >
-                  {platform}
-                </Button>
-              ))}
+            <div className="w-full min-w-0">
+              <ScrollArea className="w-full">
+                <div className="flex items-center gap-2 pb-2 lg:pb-0 min-w-max">
+                  <Button type="button" variant="secondary" className="rounded-full bg-white text-black h-8 font-medium hover:bg-gray-100 flex-shrink-0" onClick={() => handlePlatformClick('Spotify')}>
+                    <span className="text-green-500"><Music2 className="w-3 h-3 fill-current" /></span> Spotify
+                  </Button>
+                  {['Instagram', 'Youtube', 'SoundCloud', 'Apple Music'].map(platform => (
+                    <Button
+                      key={platform}
+                      type="button"
+                      variant="outline"
+                      onClick={() => handlePlatformClick(platform)}
+                      className="rounded-full res_font border-zinc-700 text-zinc-300 h-8 hover:bg-zinc-800 hover:text-white bg-transparent flex-shrink-0"
+                    >
+                      {platform}
+                    </Button>
+                  ))}
+                </div>
+                <ScrollBar orientation="horizontal" className="h-1.5" />
+              </ScrollArea>
             </div>
           </div>
         </form>
@@ -340,16 +376,16 @@ export default function ArtistTable() {
       {/* Table */}
       <div
         ref={tableContainerRef}
-        className="rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto h-[calc(100vh-280px)] no-scrollbar min-h-[400px]"
+        className="rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto flex-1  min-h-0"
       >
-        <div className="min-w-[800px]">
+        <div className="min-w-[800px] md:min-w-full">
           <Table>
-            <TableHeader className="bg-zinc-900/50 border-zinc-800 sticky top-0 z-10 backdrop-blur-md">
+            <TableHeader className="bg-zinc-900/50 border-zinc-800  sticky  top-0 z-10 backdrop-blur-md">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-zinc-800 hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="border-zinc-800   hover:bg-transparent">
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id} className="text-zinc-400 uppercase text-xs font-medium bg-zinc-900/90">
+                      <TableHead key={header.id} className="text-zinc-400  uppercase text-xs font-medium bg-zinc-900/90">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
