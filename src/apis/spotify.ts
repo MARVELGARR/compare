@@ -14,7 +14,16 @@ export interface SpotifyAlbum {
 }
 
 // Mock data generators for missing API fields
-const getRandomInt = (min: number, max: number) => Math.floor(Math.random() * (max - min + 1)) + min;
+// Deterministic pseudo-random number based on a seed (string)
+const getDeterministicRandom = (seed: string, min: number, max: number, offset = 0) => {
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) {
+    hash = ((hash << 5) - hash) + seed.charCodeAt(i);
+    hash |= 0; // Convert to 32bit integer
+  }
+  const val = Math.abs(hash + offset) % (max - min + 1);
+  return min + val;
+};
 const formatCompactNumber = (number: number) => Intl.NumberFormat('en-US', { notation: "compact", maximumFractionDigits: 1 }).format(number);
 
 export interface ArtistRanking {
@@ -75,7 +84,7 @@ export async function getArtistRankingsByGenre(limit = 50, offset = 0, market = 
       popularity: popularity,
       popularityDisplay: `${popularity}%`,
       genres: artist.genres || [],
-      trendData: Array.from({ length: 15 }, () => getRandomInt(40, 100)) // Visual trend indicator
+      trendData: Array.from({ length: 15 }, (_, i) => getDeterministicRandom(artist.id, 40, 100, i)) // Deterministic trend indicator
     };
   });
 }
@@ -111,7 +120,7 @@ export async function getArtistRankings(limit = 50, offset = 0, market = "NG", g
       popularity: popularity,
       popularityDisplay: `${popularity}%`,
       genres: artist.genres || [],
-      trendData: Array.from({ length: 15 }, () => getRandomInt(40, 100)) // Visual trend indicator
+      trendData: Array.from({ length: 15 }, (_, i) => getDeterministicRandom(artist.id, 40, 100, i)) // Deterministic trend indicator
     };
   });
 }

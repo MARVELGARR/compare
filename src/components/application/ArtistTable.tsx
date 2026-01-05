@@ -89,17 +89,13 @@ export default function ArtistTable() {
   const { watch, control } = form;
   const formValues = watch();
 
-  // Sync Form -> URL & Query & Reset Page
+  // Sync URL -> Form (when URL changes externally, e.g. back button)
   useEffect(() => {
-    if (formValues.market !== urlMarket) {
-      setUrlMarket(formValues.market);
-      setPage(1);
-    }
-    if (formValues.genre !== urlGenre) {
-      setUrlGenre(formValues.genre || null);
-      setPage(1);
-    }
-  }, [formValues, setUrlMarket, setUrlGenre, urlMarket, urlGenre, setPage]);
+    form.reset({
+      market: urlMarket as Market,
+      genre: urlGenre || '',
+    });
+  }, [urlMarket, urlGenre, form]);
 
   // Scroll to top when page changes
   useEffect(() => {
@@ -188,7 +184,8 @@ export default function ArtistTable() {
               <div className="font-bold text-white">{row.original.followersDisplay}</div>
               <div className={`text-xs flex items-center justify-end gap-1 ${isUp ? 'text-green-500' : 'text-red-500'}`}>
                 {isUp ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
-                {(Math.random() * 2).toFixed(2)}%
+                {/* Stable pseudo-random percentage based on followers count */}
+                {(Number(row.original.id.charCodeAt(0) % 20) / 10).toFixed(2)}%
               </div>
             </div>
           )
@@ -300,7 +297,12 @@ export default function ArtistTable() {
                 render={({ field }) => (
                   <FormItem className="space-y-0">
                     <Select
-                      onValueChange={(val) => field.onChange(val === "ALL" ? "" : val)}
+                      onValueChange={(val) => {
+                        const newGenre = val === "ALL" ? "" : val;
+                        field.onChange(newGenre);
+                        setUrlGenre(newGenre || null);
+                        setPage(1);
+                      }}
                       value={field.value || "ALL"}
                     >
                       <FormControl>
@@ -334,7 +336,11 @@ export default function ArtistTable() {
                           <button
                             key={m.code}
                             type="button"
-                            onClick={() => field.onChange(m.code)}
+                            onClick={() => {
+                              field.onChange(m.code);
+                              setUrlMarket(m.code);
+                              setPage(1);
+                            }}
                             className={`flex-shrink-0 px-4 py-1.5 rounded-full cursor-pointer transition-colors whitespace-nowrap ${field.value === m.code ? 'bg-white text-black shadow-sm' : 'text-zinc-400 hover:text-white'}`}
                           >
                             {m.name}
