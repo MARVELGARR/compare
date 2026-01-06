@@ -38,15 +38,38 @@ export async function spotifyRequest<T>(
     Object.entries(params).forEach(([k, v]) => url.searchParams.set(k, v));
   }
 
-  const res = await fetch(url.toString(), {
-    headers: {
-      Authorization: `Bearer ${token}`
-    },
-    cache: "force-cache"
-  });
+  const maxRetries = 3;
+  let delay = 1000; // start with 1s delay
 
-  if (!res.ok) throw new Error(`Spotify API Error: ${res.status}`);
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      const res = await fetch(url.toString(), {
+        headers: {
+          Authorization: `Bearer ${token}`
+        },
+        cache: "force-cache"
+      });
 
-  return res.json();
+      if (res.ok) return res.json();
+
+      // Transient errors that are worth retrying
+      if (attempt < maxRetries && [429, 502, 503, 504].includes(res.status)) {
+        console.warn(`Spotify API ${res.status} on attempt ${attempt}. Retrying in ${delay}ms...`);
+        await new Promise(resolve => setTimeout(resolve, delay));
+        delay *= 2; // exponential backoff
+        continue;
+      }
+
+      throw new Error(`Spotify API Error: ${res.status}`);
+    } catch (err) {
+      if (attempt === maxRetries) throw err;
+      // For network-level errors (not HTTP status codes)
+      console.warn(`Network error on attempt ${attempt}. Retrying in ${delay}ms...`, err);
+      await new Promise(resolve => setTimeout(resolve, delay));
+      delay *= 2;
+    }
+  }
+
+  throw new Error("Failed to fetch from Spotify after maximum retries");
 }
 

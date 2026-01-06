@@ -63,8 +63,8 @@ const MARKETS: { code: Market; name: string }[] = [
   { code: 'ZA', name: 'South Africa' },
 ];
 
-const GENRES = [
-  "Afrobeat", "Afropop", "Amapiano", "Hip Hop", "R&B", "Rap", "Highlife", "Alte"
+export const GENRES = [
+  "afrobeat", "afropop", "amapiano", "hiphop", "r&b", "rap", "highlife", "alte"
 ];
 
 const LIMIT = 10;

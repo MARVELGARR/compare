@@ -27,7 +27,7 @@ export default function ArtistSearchPopover({
 
 
 
-  const [market] = useQueryState("market", { defaultValue: "ALL" as string, clearOnDefault: true })
+  const [market] = useQueryState("market", { defaultValue: "NG" as string, clearOnDefault: true })
 
   const [searchQuery, setSearch] = useQueryState("search", { defaultValue: "", clearOnDefault: true }
   )
@@ -117,8 +117,8 @@ export default function ArtistSearchPopover({
                     onClick={() => !selected && handleAddArtist(artist)}
                     disabled={selected}
                     className={`w-full flex items-center gap-3 p-3 rounded-lg transition-colors ${selected
-                        ? 'bg-neutral-800/50 opacity-50 cursor-not-allowed'
-                        : 'hover:bg-neutral-800/50 cursor-pointer'
+                      ? 'bg-neutral-800/50 opacity-50 cursor-not-allowed'
+                      : 'hover:bg-neutral-800/50 cursor-pointer'
                       }`}
                   >
                     <Avatar className="h-10 w-10">
@@ -136,10 +136,10 @@ export default function ArtistSearchPopover({
 
                     <Badge
                       className={`min-w-[50px] justify-center rounded-md border-0 font-bold text-xs ${artist.popularity >= 80
-                          ? 'bg-orange-600/20 text-orange-500'
-                          : artist.popularity >= 60
-                            ? 'bg-amber-600/20 text-amber-500'
-                            : 'bg-green-600/20 text-green-500'
+                        ? 'bg-orange-600/20 text-orange-500'
+                        : artist.popularity >= 60
+                          ? 'bg-amber-600/20 text-amber-500'
+                          : 'bg-green-600/20 text-green-500'
                         }`}
                     >
                       {artist.popularity}%

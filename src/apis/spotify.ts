@@ -88,12 +88,12 @@ export async function getArtistRankingsByGenre(limit = 50, offset = 0, market = 
     };
   });
 }
-export async function getArtistRankings(limit = 50, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
+export async function getArtistRankings(limit = 10, offset = 0, market = "NG", genre?: string | null): Promise<ArtistRanking[]> {
   // Construct search query based on genre selection
   let query = '';
   if (genre) {
     // If a specific genre is selected, search for that genre
-    query = `artist:${encodeURIComponent(genre.toLowerCase())}`;
+    query = `genre:${encodeURIComponent(genre.toLowerCase())}`;
   } else {
     // If no genre (All Genres), search for recent/active artists in the market
     // Using year range to get currently active artists
@@ -147,6 +147,11 @@ export async function getArtistAlbum(id: string, include_group: Include_Group, m
   )
   return data
 }
+
+
+// export async function searchArtist(
+
+// )
 
 
 

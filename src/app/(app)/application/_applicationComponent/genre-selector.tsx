@@ -1,9 +1,16 @@
 "use client"
 
 import { useRouter, useSearchParams } from "next/navigation"
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select"
 
 interface GenreSelectorProps {
-  genres: any
+  genres: string[]
 }
 
 export default function GenreSelector({ genres }: GenreSelectorProps) {
@@ -14,23 +21,28 @@ export default function GenreSelector({ genres }: GenreSelectorProps) {
   const handleGenreChange = (genre: string) => {
     const params = new URLSearchParams(searchParams)
     params.set("genre", genre)
-    router.push(`?${params.toString()}`)
+    router.push(`?${params.toString()}`, { scroll: false })
   }
 
   return (
-    <div className="flex gap-2">
-      <select
-        value={currentGenre}
-        onChange={(e) => handleGenreChange(e.target.value)}
-        className="bg-background border border-border text-xs rounded-md px-2 py-1 outline-none focus:ring-1 focus:ring-ring w-24"
-      >
-        <option value="afrobeat">Afrobeat (Default)</option>
-        {genres.map((g: any) => (
-          <option key={g} value={g}>
-            {g.charAt(0).toUpperCase() + g.slice(1)}
-          </option>
+    <Select value={currentGenre} onValueChange={handleGenreChange}>
+      <SelectTrigger className="w-40 h-8 text-xs font-medium bg-zinc-950 text-zinc-50 border-zinc-800 hover:bg-zinc-900 focus:ring-zinc-700 transition-colors">
+        <SelectValue placeholder="Select genre" />
+      </SelectTrigger>
+      <SelectContent className="bg-zinc-950 text-zinc-50 border-zinc-800">
+        <SelectItem value="afrobeat" className="focus:bg-zinc-900 focus:text-zinc-50">
+          Afrobeat (Default)
+        </SelectItem>
+        {genres?.map((genre) => (
+          <SelectItem
+            key={genre}
+            value={genre}
+            className="capitalize focus:bg-zinc-900 focus:text-zinc-50"
+          >
+            {genre}
+          </SelectItem>
         ))}
-      </select>
-    </div>
+      </SelectContent>
+    </Select>
   )
 }

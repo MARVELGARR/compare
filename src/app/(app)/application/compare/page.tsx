@@ -4,7 +4,7 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
 import { fetchArtistRankings } from '@/src/app/(app)/application/actions';
-import { ArtistRanking } from '@/src/apis/spotify';
+import { ArtistRanking, getArtistRankings } from '@/src/apis/spotify';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
@@ -15,22 +15,30 @@ import { MarketSelector } from '../_applicationComponent/marketSelector';
 import { useSearchParams } from 'next/navigation';
 import { ChartRadar, ChartRadarDots } from './_chart/chart';
 import { ChartLineTopTracks } from './_chart/line-chart';
+import GenreSelector from '../_applicationComponent/genre-selector';
+import { GENRES } from '@/src/components/application/ArtistTable';
 
 
 export default function ComparePage() {
   const [selectedArtists, setSelectedArtists] = useState<SpotifyArtist[]>([]);
-  const [timeFilter, setTimeFilter] = useState("All");
-
+  const searchParams = useSearchParams()
+  const currentGenre = searchParams.get("genre") || "afrobeat"
 
   const urlQuery = useSearchParams()
   const market = urlQuery.get("market") || "NG"
 
 
+
   // Fetch default artist rankings for the list
-  const { data: artists, isLoading } = useQuery({
-    queryKey: ["artist-rankings", market],
-    queryFn: () => fetchArtistRankings(20, 0, market, null),
-  });
+  // const { data: artists, isLoading } = useQuery({
+  //   queryKey: ["artist-rankings", market],
+  //   queryFn: () => fetchArtistRankings(20, 0, market, null),
+  // });
+
+  const { data: popularArtist, isLoading: popularArtistLoading } = useQuery({
+    queryKey: ["popular-artists", market],
+    queryFn: () => getArtistRankings(10, 0, market, currentGenre),
+  })
 
   const handleAddArtist = (artist: any) => {
     if (selectedArtists.length >= 4) return;
@@ -67,7 +75,7 @@ export default function ComparePage() {
 
       <h1 className="tit font-semibold text-white mb-6 md:mb-10">Artist Comparison</h1>
 
-
+      <GenreSelector genres={GENRES} />
       {/* Filters */}
       <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
         {/* <Button
@@ -103,18 +111,18 @@ export default function ComparePage() {
 
 
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
-        <div className={`${selectedArtists.length >= 2 ? 'hidden lg:block' : 'block'} w-full lg:w-[400px] space-y-2 rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-3 md:p-4`}>
-          <div className="mb-3 md:mb-4 flex items-center justify-between text-xs text-neutral-500">
+        <div className={`${selectedArtists.length >= 2 ? 'hidden lg:block' : 'block'} w-full lg:w-[400px] space-y-2 rounded-2xl border border-neutral-800 bg-[#0d0d0d] h-[calc(100vh-20rem)] p-3 md:p-4`}>
+          <div className="mb-3 md:mb-4 flex sticky top-0 items-center justify-between text-xs text-neutral-500">
             <span>#</span>
             <span>Artist</span>
             <span className="mr-2 md:mr-4">Popularity</span>
           </div>
 
-          <div className="max-h-[400px] md:max-h-[600px] overflow-y-auto space-y-1">
-            {isLoading ? (
+          <div className="max-h-full overflow-y-auto  overflow-y-auto space-y-1">
+            {popularArtistLoading ? (
               <div className="text-center py-8 text-neutral-500">Loading artists...</div>
             ) : (
-              artists?.slice(0, 15).map((artist: ArtistRanking, index: number) => (
+              popularArtist?.sort((a, b) => b.popularity - a.popularity).slice(0, 15).map((artist: ArtistRanking, index: number) => (
                 <div
                   key={artist.id}
                   className="group flex items-center gap-2 md:gap-4 rounded-lg p-2 md:p-3 transition-colors hover:bg-neutral-800/50 cursor-pointer"
