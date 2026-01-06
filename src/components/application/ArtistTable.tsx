@@ -1,10 +1,11 @@
 "use client";
 
 import { useState, useEffect, useMemo, useRef } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useQuery, keepPreviousData } from "@tanstack/react-query";
 import { ArrowDown, ArrowUp, Music2, Filter } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
+import Image from "next/image";
 import { useQueryState, parseAsString, parseAsStringLiteral, parseAsInteger } from "nuqs";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -104,9 +105,10 @@ export default function ArtistTable() {
     }
   }, [page]);
 
-  const { data: artists, isLoading, error } = useQuery({
+  const { data: artists, isLoading, isFetching, error } = useQuery({
     queryKey: ["artist-rankings", formValues.market, formValues.genre, page],
     queryFn: () => getArtistRankingsByGenre(LIMIT, (page - 1) * LIMIT, formValues.market, formValues.genre || null),
+    placeholderData: keepPreviousData,
   });
 
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -149,7 +151,7 @@ export default function ArtistTable() {
           <div className="flex items-center gap-3 res_font">
             <div className="w-10 h-10 md:w-12 md:h-12 relative rounded-md overflow-hidden bg-zinc-800 flex-shrink-0">
               {row.original.avatar ? (
-                <img src={row.original.avatar} alt={row.original.name} className="object-cover w-full h-full" />
+                <Image src={row.original.avatar} alt={row.original.name} fill className="object-cover" />
               ) : (
                 <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">?</div>
               )}
@@ -178,7 +180,8 @@ export default function ArtistTable() {
           )
         },
         cell: ({ row }) => {
-          const isUp = Math.random() > 0.4;
+          // Use a deterministic value based on ID instead of Math.random() to prevent hydration mismatches
+          const isUp = (row.original.id.charCodeAt(0) + row.original.id.charCodeAt(row.original.id.length - 1)) % 2 === 0;
           return (
             <div className="text-right">
               <div className="font-bold text-white">{row.original.followersDisplay}</div>
@@ -213,7 +216,7 @@ export default function ArtistTable() {
               {row.original.trendData.map((val: any, i: any) => (
                 <div
                   key={i}
-                  className={`w-full rounded-t-sm transition-all ${i === row.original.trendData.length - 1 ? 'bg-green-500 animate-pulse' : 'bg-green-500/50'}`}
+                  className={`w-full rounded-t-sm ${i === row.original.trendData.length - 1 ? 'bg-green-500 animate-pulse' : 'bg-green-500/50'}`}
                   style={{ height: `${val}%` }}
                 ></div>
               ))}
@@ -382,8 +385,13 @@ export default function ArtistTable() {
       {/* Table */}
       <div
         ref={tableContainerRef}
-        className="rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto flex-1  min-h-0"
+        className={`rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto flex-1 min-h-0 relative ${isFetching ? 'opacity-70 grayscale-[0.3]' : ''} transition-all duration-300`}
       >
+        {isFetching && (
+          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/5 pointer-events-none">
+            <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+          </div>
+        )}
         <div className="min-w-[800px] md:min-w-full">
           <Table>
             <TableHeader className="bg-zinc-900/50 border-zinc-800  sticky  top-0 z-10 backdrop-blur-md">

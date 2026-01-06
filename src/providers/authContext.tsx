@@ -14,7 +14,7 @@ export interface Target {
   identifier: string;
   expired: boolean;
 }
- interface User {
+interface User {
   $id: string;
   $createdAt: string; // ISO date string
   $updatedAt: string; // ISO date string
@@ -33,17 +33,17 @@ export interface Target {
   accessedAt: string; // ISO date string
 }
 type AuthContextType = {
-    User: User | null
-    isLoading: boolean
-    logout: ()=>void
-    isAuthenticated: boolean
+  User: User | null
+  isLoading: boolean
+  logout: () => void
+  isAuthenticated: boolean
 }
 
-const AuthContext = createContext<AuthContextType | null>({User: null, isLoading: false, logout: ()=>{}, isAuthenticated: false} )
+const AuthContext = createContext<AuthContextType | null>({ User: null, isLoading: false, logout: () => { }, isAuthenticated: false })
 
 
-export const UserSessionContext = ({children}: {children: ReactNode}) =>{
-    const [User, setUser] = useState<User | null>(null);
+export const UserSessionContext = ({ children }: { children: ReactNode }) => {
+  const [User, setUser] = useState<User | null>(null);
   const [isLoading, setIsLoading] = useState(true);
 
 
@@ -52,26 +52,33 @@ export const UserSessionContext = ({children}: {children: ReactNode}) =>{
   useEffect(() => {
     account.get()
       .then((user) => setUser(user as User))
-      .catch(() => setUser(null))
+      .catch((error) => {
+        // If it's a 401 (Unauthorized) error, just set user to null silently
+        // This is expected for guests. Only log other errors.
+        if (error.code !== 401) {
+          console.error("Appwrite account error:", error);
+        }
+        setUser(null);
+      })
       .finally(() => setIsLoading(false));
   }, []);
 
-    const logout = () => account.deleteSessions()
-    const  isAuthenticated = User && User !== null ? true : false
-    return(
-        <AuthContext.Provider value={{User, isLoading, logout, isAuthenticated}}>
-            {children}
-        </AuthContext.Provider>
-    )
+  const logout = () => account.deleteSessions()
+  const isAuthenticated = User && User !== null ? true : false
+  return (
+    <AuthContext.Provider value={{ User, isLoading, logout, isAuthenticated }}>
+      {children}
+    </AuthContext.Provider>
+  )
 }
 
 
-export const useAuth = () =>{
+export const useAuth = () => {
 
-    const AuthCOntext = useContext(AuthContext)
+  const AuthCOntext = useContext(AuthContext)
 
-    if(!AuthCOntext || AuthCOntext === null){
-        throw new Error("Cannot use this hook outside of the Auth context")
-    }
-    return AuthCOntext
+  if (!AuthCOntext || AuthCOntext === null) {
+    throw new Error("Cannot use this hook outside of the Auth context")
+  }
+  return AuthCOntext
 }
