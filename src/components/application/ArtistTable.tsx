@@ -75,7 +75,7 @@ export default function ArtistTable() {
 
   // URL State with nuqs (kept for syncing URL <-> Form)
   const [urlMarket, setUrlMarket] = useQueryState<Market>('market', parseAsStringLiteral(['NG', 'US', 'GB', 'GH', 'ZA'] as const).withDefault('NG'));
-  const [urlGenre, setUrlGenre] = useQueryState('genre', parseAsString.withDefault(''));
+  const [urlGenre, setUrlGenre] = useQueryState('genre', parseAsString.withDefault('afropop'));
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
 
   // Initialize React Hook Form
