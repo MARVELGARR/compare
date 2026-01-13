@@ -11,14 +11,25 @@ export function middleware(request: NextRequest) {
   const rl = rateLimit(ip, 50, 10000);
 
   if (!rl.success) {
-    return new NextResponse('Too Many Requests', {
-      status: 429,
-      headers: {
-        'X-RateLimit-Limit': rl.limit.toString(),
-        'X-RateLimit-Remaining': rl.remaining.toString(),
-        'X-RateLimit-Reset': rl.reset.toString(),
+    return NextResponse.json(
+      {
+        error: 'Rate limit exceeded',
+        message: 'Too many requests. Please slow down and try again.',
+        limit: rl.limit,
+        remaining: rl.remaining,
+        reset: rl.reset,
+        retryAfter: Math.ceil((rl.reset - Date.now()) / 1000),
       },
-    });
+      {
+        status: 429,
+        headers: {
+          'X-RateLimit-Limit': rl.limit.toString(),
+          'X-RateLimit-Remaining': rl.remaining.toString(),
+          'X-RateLimit-Reset': rl.reset.toString(),
+          'Retry-After': Math.ceil((rl.reset - Date.now()) / 1000).toString(),
+        },
+      }
+    );
   }
 
   // --- Logic from original proxy.ts ---
