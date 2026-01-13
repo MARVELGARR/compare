@@ -382,24 +382,27 @@ export default function ArtistTable() {
         </form>
       </Form>
 
-      {/* Table */}
+
+      {/* Table / Card View */}
       <div
         ref={tableContainerRef}
         className={`rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto flex-1 min-h-0 relative ${isFetching ? 'opacity-70 grayscale-[0.3]' : ''} transition-all duration-300`}
       >
         {isFetching && (
           <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/5 pointer-events-none">
-            <div className="w-8 h-8 border-2 border-white/20 border-t-white rounded-full animate-spin"></div>
+            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
-        <div className="min-w-[800px] md:min-w-full">
+
+        {/* Desktop View */}
+        <div className="hidden md:block min-w-full">
           <Table>
-            <TableHeader className="bg-zinc-900/50 border-zinc-800  sticky  top-0 z-10 backdrop-blur-md">
+            <TableHeader className="bg-zinc-900/50 border-zinc-800 sticky top-0 z-10 backdrop-blur-md">
               {table.getHeaderGroups().map((headerGroup) => (
-                <TableRow key={headerGroup.id} className="border-zinc-800   hover:bg-transparent">
+                <TableRow key={headerGroup.id} className="border-zinc-800 hover:bg-transparent">
                   {headerGroup.headers.map((header) => {
                     return (
-                      <TableHead key={header.id} className="text-zinc-400  uppercase text-xs font-medium bg-zinc-900/90">
+                      <TableHead key={header.id} className="text-zinc-400 uppercase text-xs font-medium bg-zinc-900/90">
                         {header.isPlaceholder
                           ? null
                           : flexRender(
@@ -443,6 +446,55 @@ export default function ArtistTable() {
               )}
             </TableBody>
           </Table>
+        </div>
+
+        {/* Mobile Card View */}
+        <div className="md:hidden flex flex-col gap-4 p-4">
+          {table.getRowModel().rows?.length ? (
+            table.getRowModel().rows.map((row) => (
+              <div
+                key={row.id}
+                onClick={() => router.push(`/application/artist/${row.original.id}`)}
+                className="bg-zinc-900/50 border border-zinc-800 rounded-xl p-4 flex flex-col gap-4 active:bg-zinc-800 transition-colors"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="text-zinc-500 font-mono text-lg">#{row.getValue("rank")}</span>
+                  <div className="w-12 h-12 relative rounded-md overflow-hidden bg-zinc-800 flex-shrink-0">
+                    {row.original.avatar ? (
+                      <Image src={row.original.avatar} alt={row.original.name} fill className="object-cover" />
+                    ) : (
+                      <div className="w-full h-full flex items-center justify-center text-zinc-500 text-xs">?</div>
+                    )}
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <div className="font-bold text-white text-base truncate">{row.original.name}</div>
+                    <div className="text-zinc-500 text-xs truncate">{row.original.handle}</div>
+                  </div>
+                </div>
+
+                <div className="grid grid-cols-2 gap-4 border-t border-zinc-800 pt-3">
+                  <div>
+                    <div className="text-xs text-zinc-400 mb-1">Followers</div>
+                    <div className="font-semibold text-white">{row.original.followersDisplay}</div>
+                  </div>
+                  <div>
+                    <div className="text-xs text-zinc-400 mb-1">Popularity</div>
+                    <div className="font-semibold text-white">{row.original.popularityDisplay}</div>
+                  </div>
+                </div>
+
+                <div className="flex flex-wrap gap-1 mt-1">
+                  {row.original.genres.slice(0, 3).map((genre) => (
+                    <span key={genre} className="px-2 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-300 capitalize">
+                      {genre}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            ))
+          ) : (
+            <div className="text-center text-zinc-500 py-10">No results found for your filters.</div>
+          )}
         </div>
       </div>
 
