@@ -13,10 +13,10 @@ interface ComparisonSearchProps {
   maxArtists?: number;
 }
 
-export default function ComparisonSearch({ 
-  onArtistsSelected, 
+export default function ComparisonSearch({
+  onArtistsSelected,
   selectedArtists,
-  maxArtists = 4 
+  maxArtists = 4
 }: ComparisonSearchProps) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearching, setIsSearching] = useState(false);
@@ -33,11 +33,11 @@ export default function ComparisonSearch({
 
   const handleAddArtist = async (artistId: string) => {
     if (selectedArtists.length >= maxArtists) return;
-    
+
     // Fetch full artist details
     const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`);
     const artist = await response.json();
-    
+
     if (!selectedArtists.find(a => a.id === artistId)) {
       onArtistsSelected([...selectedArtists, artist]);
       setSearchQuery('');
@@ -81,7 +81,7 @@ export default function ComparisonSearch({
 
         {/* Search Results Dropdown */}
         {isSearching && searchQuery.length >= 2 && (
-          <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto">
+          <div className="absolute top-full left-0 right-0 mt-2 bg-zinc-900 border border-zinc-800 rounded-lg shadow-xl z-50 max-h-96 overflow-y-auto no-scrollbar">
             {isLoading ? (
               <div className="p-4 text-center text-zinc-500">Searching...</div>
             ) : searchResults && searchResults.length > 0 ? (
@@ -135,16 +135,16 @@ export default function ComparisonSearch({
               >
                 <X className="w-3 h-3 text-white" />
               </button>
-              
+
               <div className="flex flex-col items-center gap-2">
                 <div className="w-20 h-20 rounded-full overflow-hidden bg-zinc-800">
                   {artist.images?.[0] ? (
-                    <Image 
-                      src={artist.images[0].url} 
-                      alt={artist.name} 
-                      width={80} 
-                      height={80} 
-                      className="w-full h-full object-cover" 
+                    <Image
+                      src={artist.images[0].url}
+                      alt={artist.name}
+                      width={80}
+                      height={80}
+                      className="w-full h-full object-cover"
                     />
                   ) : (
                     <div className="w-full h-full flex items-center justify-center text-2xl font-bold text-zinc-500">
@@ -161,7 +161,7 @@ export default function ComparisonSearch({
               </div>
             </div>
           ))}
-          
+
           {/* Add More Placeholder */}
           {selectedArtists.length < maxArtists && (
             <button

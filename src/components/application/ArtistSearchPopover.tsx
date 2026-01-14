@@ -103,7 +103,7 @@ export default function ArtistSearchPopover({
           </div>
 
           {/* Artist List */}
-          <div className="max-h-[400px] overflow-y-auto space-y-1">
+          <div className="max-h-[400px] overflow-y-auto no-scrollbar space-y-1">
             {isLoading ? (
               <div className="flex items-center justify-center py-8">
                 <Loader2 className="h-6 w-6 animate-spin text-neutral-500" />

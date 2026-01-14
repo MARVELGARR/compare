@@ -16,12 +16,13 @@ interface GenreSelectorProps {
 export default function GenreSelector({ genres }: GenreSelectorProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
-  const currentGenre = searchParams.get("genre") || "afrobeat"
+  const currentGenre = searchParams.get("genre") || "afropop"
 
   const handleGenreChange = (genre: string) => {
-    const params = new URLSearchParams(searchParams)
+    const params = new URLSearchParams(searchParams.toString())
     params.set("genre", genre)
     router.push(`?${params.toString()}`, { scroll: false })
+    router.refresh()
   }
 
   return (

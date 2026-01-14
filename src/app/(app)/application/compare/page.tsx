@@ -17,6 +17,7 @@ import { ChartRadar, ChartRadarDots } from './_chart/chart';
 import { ChartLineTopTracks } from './_chart/line-chart';
 import GenreSelector from '../_applicationComponent/genre-selector';
 import { GENRES } from '@/src/components/application/ArtistTable';
+import { ScrollArea } from '@/src/components/ui/scroll-area';
 
 
 export default function ComparePage() {
@@ -67,47 +68,50 @@ export default function ComparePage() {
   };
 
   return (
-    <div className="p-4 md:p-8 relative h-full overflow-hidden flex flex-col">
+    <ScrollArea className=" pb-10 md:p-8 relative max-h-[calc(100vh-5rem)] overflow-y-auto no-scrollbar flex flex-col">
       {/* Market selector - Adjusted for mobile */}
-      <div className="absolute right-4 top-4 md:right-8 md:top-8 z-10">
-        <MarketSelector />
-      </div>
+      <div className="sticky top-0 bg-inherit z-40">
 
-      <h1 className="tit font-semibold text-white mb-6 md:mb-10">Artist Comparison</h1>
+        <div className="absolute right-4 top-4 md:right-8 md:top-8 z-10">
+          <MarketSelector />
+        </div>
 
-      <GenreSelector genres={GENRES} />
-      {/* Filters */}
-      <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
-        {/* <Button
-            variant="outline"
-            size="sm"
-            className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
-          >
-            <Sliders className="h-4 w-4" />
-            <span className="hidden sm:inline">Filters</span>
-          </Button> */}
+        <h1 className="tit font-semibold text-white mb-6 md:mb-10">Artist Comparison</h1>
 
-        {/* {["1d", "7d", "1m", "All"].map((filter) => (
-            <Button
-              key={filter}
-              variant={timeFilter === filter ? "default" : "outline"}
+        <GenreSelector genres={GENRES} />
+        {/* Filters */}
+        <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
+          {/* <Button
+              variant="outline"
               size="sm"
-              className={`rounded-full ${
-                timeFilter === filter
-                  ? "bg-white text-black hover:bg-neutral-100"
-                  : "border-neutral-700 bg-transparent text-neutral-400 hover:bg-neutral-800 hover:text-white"
-              }`}
-              onClick={() => setTimeFilter(filter)}
+              className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
             >
-              {filter}
-            </Button>
-          ))} */}
+              <Sliders className="h-4 w-4" />
+              <span className="hidden sm:inline">Filters</span>
+            </Button> */}
+
+          {/* {["1d", "7d", "1m", "All"].map((filter) => (
+              <Button
+                key={filter}
+                variant={timeFilter === filter ? "default" : "outline"}
+                size="sm"
+                className={`rounded-full ${
+                  timeFilter === filter
+                    ? "bg-white text-black hover:bg-neutral-100"
+                    : "border-neutral-700 bg-transparent text-neutral-400 hover:bg-neutral-800 hover:text-white"
+                }`}
+                onClick={() => setTimeFilter(filter)}
+              >
+                {filter}
+              </Button>
+            ))} */}
+        </div>
       </div>
 
 
 
       {/* Responsive Layout */}
-      <div className="flex flex-col  overflow-y-auto  lg:flex-row gap-4 md:gap-6">
+      <div className="flex flex-col overflow-y-auto no-scrollbar lg:flex-row gap-4 md:gap-6">
 
 
         {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
@@ -118,7 +122,7 @@ export default function ComparePage() {
             <span className="mr-2 md:mr-4">Popularity</span>
           </div>
 
-          <div className="max-h-full overflow-y-auto  overflow-y-auto space-y-1">
+          <div className="max-h-full overflow-y-auto no-scrollbar space-y-1">
             {popularArtistLoading ? (
               <div className="text-center py-8 text-neutral-500">Loading artists...</div>
             ) : (
@@ -232,6 +236,6 @@ export default function ComparePage() {
           )}
         </div>
       </div>
-    </div>
+    </ScrollArea>
   );
 }

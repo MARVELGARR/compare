@@ -2,7 +2,7 @@
 
 import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
-import { TrendingUp, Sparkles, Tag, Users, LayoutGrid } from "lucide-react";
+import { TrendingUp, LayoutGrid } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
 import { HeaderContainer, NavContextProvider } from "./_LayoutComponents/Headers/HeaderComponent";
 
@@ -46,34 +46,10 @@ const AppLayout = ({ children }: { children: ReactNode }) => {
               >
                 <TrendingUp className="h-5 w-5" />
               </Button>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                className="rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-white"
-              >
-                <Sparkles className="h-5 w-5" />
-              </Button>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                className="rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-white"
-              >
-                <Tag className="h-5 w-5" />
-              </Button>
-
-              <Button
-                size="icon"
-                variant="ghost"
-                className="rounded-full text-neutral-400 hover:bg-neutral-800 hover:text-white"
-              >
-                <Users className="h-5 w-5" />
-              </Button>
             </aside>
 
             {/* Main Content */}
-            <main className="flex-1 h-full min-w-0">{children}</main>
+            <main className="flex-1 h-full min-w-0 overflow-y-auto no-scrollbar">{children}</main>
           </div>
         </div>
       </div>

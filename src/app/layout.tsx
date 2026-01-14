@@ -39,7 +39,7 @@ export default function RootLayout({
 
 
                 <Toaster />
-                <div className="h-full ">
+                <div className="h-screen ">
 
                   {children}
                 </div>

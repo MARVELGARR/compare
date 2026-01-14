@@ -67,7 +67,7 @@ export const GENRES = [
   "afrobeat", "afropop", "amapiano", "hiphop", "r&b", "rap", "highlife", "alte"
 ];
 
-const LIMIT = 10;
+const LIMIT = 5;
 
 export default function ArtistTable() {
   const router = useRouter();
@@ -287,10 +287,10 @@ export default function ArtistTable() {
   // if (error) return <div className="text-red-500 p-8">Error loading data.</div>;
 
   return (
-    <div className="w-full h-full flex flex-col text-white font-sans mt-4 min-h-0 min-w-0">
+    <div className="w-full h-full relative z-40 flex flex-col text-white font-sans mt-4 min-h-0 min-w-0">
       {/* Filters form group */}
-      <Form {...form}>
-        <form className="w-full res-font">
+      <Form  {...form}>
+        <form className="w-full bg-primary res-font sticky top-0  z-50 ">
           <div className="flex flex-col lg:overflow-x-auto lg:flex-row items-start lg:items-center justify-between mb-6 gap-6 md:gap-4">
             <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4 w-full lg:w-auto">
               {/* Genre Dropdown */}
@@ -384,12 +384,12 @@ export default function ArtistTable() {
 
 
       {/* Table / Card View */}
-      <div
+      <ScrollArea
         ref={tableContainerRef}
-        className={`rounded-xl border border-zinc-800 overflow-x-auto overflow-y-auto flex-1 min-h-0 relative ${isFetching ? 'opacity-70 grayscale-[0.3]' : ''} transition-all duration-300`}
+        className={`rounded-xl mt-7 border  border-zinc-800 overflow-x-auto overflow-y-auto no-scrollbar max-h-full flex-1   relative ${isFetching ? 'opacity-70 grayscale-[0.3]' : ''} transition-all duration-300`}
       >
         {isFetching && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-black/5 pointer-events-none">
+          <div className="absolute h-full inset-0 z-20 flex items-center justify-center bg-black/5 pointer-events-none">
             <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin"></div>
           </div>
         )}
@@ -496,33 +496,36 @@ export default function ArtistTable() {
             <div className="text-center text-zinc-500 py-10">No results found for your filters.</div>
           )}
         </div>
-      </div>
+      </ScrollArea>
 
       {/* Pagination */}
-      <div className="flex justify-between items-center text-sm text-zinc-500 mt-4">
-        <div>
-          Showing {(page - 1) * LIMIT + 1}-{Math.min(page * LIMIT, (page - 1) * LIMIT + (artists?.length || 0))}
-          {/* Note: Total count not available from API currently, so simplistic display */}
-        </div>
-        <div className="flex gap-2">
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-zinc-800 border-none text-zinc-300 hover:bg-zinc-700 h-8"
-            onClick={handlePrevPage}
-            disabled={page === 1}
-          >
-            Previous
-          </Button>
-          <Button
-            variant="outline"
-            size="sm"
-            className="bg-zinc-800 border-none text-zinc-300 hover:bg-zinc-700 h-8"
-            onClick={handleNextPage}
-            disabled={artists?.length !== LIMIT}
-          >
-            Next
-          </Button>
+      <div className="sticky bottom-0 z-10 bg-primary h-20 flex items-center justify-center w-full">
+
+        <div className="flex justify-between w-full items-center text-sm text-zinc-500 mt-4">
+          <div>
+            Showing {(page - 1) * LIMIT + 1}-{Math.min(page * LIMIT, (page - 1) * LIMIT + (artists?.length || 0))}
+            {/* Note: Total count not available from API currently, so simplistic display */}
+          </div>
+          <div className="flex gap-2">
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-zinc-800 border-none text-zinc-300 hover:bg-zinc-700 h-8"
+              onClick={handlePrevPage}
+              disabled={page === 1}
+            >
+              Previous
+            </Button>
+            <Button
+              variant="outline"
+              size="sm"
+              className="bg-zinc-800 border-none text-zinc-300 hover:bg-zinc-700 h-8"
+              onClick={handleNextPage}
+              disabled={artists?.length !== LIMIT}
+            >
+              Next
+            </Button>
+          </div>
         </div>
       </div>
 

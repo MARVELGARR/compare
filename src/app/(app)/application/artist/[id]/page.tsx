@@ -5,6 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { ArrowLeft, Play, Disc } from "lucide-react";
 import Image from "next/image";
 import { getArtist, getArtistTopTracksByCountry } from "@/src/apis/spotify";
+import { ScrollArea } from "@/src/components/ui/scroll-area";
 
 
 export default function ArtistProfilePage() {
@@ -33,16 +34,16 @@ export default function ArtistProfilePage() {
   }
 
   return (
-    <div className="min-h-screen bg-background text-white p-6 md:p-10 font-sans">
+    <div className=" h-screen overflow-hidden flex flex-col bg-background text-white px-6 md:px-10 font-sans">
       <button
         onClick={() => router.back()}
-        className="flex items-center gap-2 text-zinc-400 hover:text-white transition-colors mb-8"
+        className="flex items-center gap-2  text-zinc-400 hover:text-white transition-colors mb-8"
       >
         <ArrowLeft className="w-4 h-4" /> Back to Rankings
       </button>
 
       {/* Header */}
-      <div className="flex flex-col md:flex-row gap-8 items-end mb-12">
+      <div className="flex mt-10 flex-col md:flex-row gap-8 items-end mb-12">
         <div className="w-48 h-48 md:w-60 md:h-60 rounded-full overflow-hidden border-4 border-zinc-800 shadow-2xl flex-shrink-0 relative">
           {artist.images[0] ? (
             <Image
@@ -78,9 +79,9 @@ export default function ArtistProfilePage() {
       </div>
 
       {/* Top Tracks */}
-      <div className="max-w-4xl">
-        <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><Disc className="w-6 h-6" /> Top Tracks</h2>
-        <div className="grid gap-2">
+      <div className="max-w-4xl border-4 min-h-0 flex-1 flex flex-col">
+        <h2 className="text-2xl  font-bold mb-6 flex items-center gap-2"><Disc className="w-6 h-6" /> Top Tracks</h2>
+        <ScrollArea className=" flex flex-col flex-1 overflow-y-auto no-scrollbar">
           {topTracks?.tracks.slice(0, 5).map((track: any, index: number) => (
             <div key={track.id} className="flex items-center gap-4 p-3 rounded-md hover:bg-zinc-900/60 transition-colors group">
               <div className="w-8 text-center text-zinc-500 font-mono">{index + 1}</div>
@@ -100,9 +101,8 @@ export default function ArtistProfilePage() {
             </div>
           ))}
           {!topTracks?.tracks.length && <div className="text-zinc-500 italic">No tracks available.</div>}
-        </div>
+        </ScrollArea>
       </div>
-
     </div>
   );
 }
