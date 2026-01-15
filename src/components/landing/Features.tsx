@@ -45,14 +45,16 @@ export default function Features() {
                 <div className="mx-auto mt-12 sm:mt-16 lg:mt-20 max-w-2xl sm:max-w-none">
                     <dl className="grid max-w-xl grid-cols-1 gap-6 sm:gap-8 lg:max-w-none lg:grid-cols-2 lg:gap-x-8 lg:gap-y-12">
                         {features.map((feature) => (
-                            <div key={feature.name} className="relative group hover:bg-zinc-800/50 p-4 sm:p-6 rounded-2xl transition-colors">
-                                <dt className="text-base font-semibold leading-7 text-white">
-                                    <div className="absolute left-4 sm:left-6 top-4 sm:top-6 flex h-10 w-10 items-center justify-center rounded-lg bg-white text-black group-hover:scale-110 transition-transform">
+                            <div key={feature.name} className="group hover:bg-zinc-800/50 p-4 sm:p-6 rounded-2xl transition-all duration-300">
+                                <dt className="flex items-center gap-x-4 text-base font-semibold leading-7 text-white">
+                                    <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-white text-black group-hover:scale-110 transition-transform shadow-xl">
                                         <feature.icon className="h-6 w-6" aria-hidden="true" />
                                     </div>
                                     {feature.name}
                                 </dt>
-                                <dd className="mt-2 text-sm sm:text-base leading-6 sm:leading-7 text-zinc-400">{feature.description}</dd>
+                                <dd className="mt-4 text-sm sm:text-base leading-7 text-zinc-400 pl-14">
+                                    {feature.description}
+                                </dd>
                             </div>
                         ))}
                     </dl>
