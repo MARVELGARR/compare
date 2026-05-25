@@ -93,7 +93,7 @@ export default function ComparisonSearch({
                     disabled={selectedArtists.some(a => a.id === artist.id) || selectedArtists.length >= maxArtists}
                     className="w-full flex items-center gap-3 px-4 py-3 hover:bg-zinc-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 flex-shrink-0">
+                    <div className="w-12 h-12 rounded-full overflow-hidden bg-zinc-800 shrink-0">
                       {artist.avatar ? (
                         <Image src={artist.avatar} alt={artist.name} width={48} height={48} className="w-full h-full object-cover" />
                       ) : (
