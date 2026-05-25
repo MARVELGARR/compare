@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/src/components/ui/button";
 import RateLimitError from "@/src/components/ui/rate-limit-error";
@@ -31,10 +31,13 @@ export default function ExampleRateLimitPage() {
         queryKey: ["example-data"],
         queryFn: fetchData,
         retry: false,
-        onError: (err: any) => {
-            handleRateLimitError(err);
-        },
     });
+
+    useEffect(() => {
+        if (error) {
+            handleRateLimitError(error);
+        }
+    }, [error, handleRateLimitError]);
 
     // If rate limited, show the error UI
     if (rateLimitInfo.isRateLimited) {

@@ -1,4 +1,4 @@
-
+import { Suspense } from "react";
 import { account } from "@/src/libs/appwrite";
 import ArtistTable from "../../../components/application/ArtistTable";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
@@ -18,7 +18,9 @@ export default async function Page() {
 
       {/* Artist Rankings Table */}
       <ScrollArea className="flex-1 pb-16">
-        <ArtistTable />
+        <Suspense fallback={<div className="text-white p-8">Loading rankings...</div>}>
+          <ArtistTable />
+        </Suspense>
       </ScrollArea>
     </div>
   );

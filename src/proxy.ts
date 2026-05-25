@@ -1,10 +1,9 @@
 
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/request';
+import { NextResponse, type NextRequest } from 'next/server';
 import { rateLimit } from './lib/rate-limit';
 
-export function middleware(request: NextRequest) {
-  const ip = request.ip ?? '127.0.0.1';
+export function proxy(request: NextRequest) {
+  const ip = request.headers.get('x-forwarded-for')?.split(',')[0] ?? '127.0.0.1';
   
   // Apply rate limiting to all requests
   // Limit: 50 requests per 10 seconds (adjust as needed)

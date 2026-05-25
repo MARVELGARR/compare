@@ -1,14 +1,12 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
-import { fetchArtistRankings } from '@/src/app/(app)/application/actions';
-import { ArtistRanking, getArtistRankings } from '@/src/apis/spotify';
-import { Button } from '@/components/ui/button';
+import { getArtistRankings, ArtistRanking } from '@/src/apis/spotify';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Badge } from '@/components/ui/badge';
-import { Sliders, X } from 'lucide-react';
+import { X } from 'lucide-react';
 import ComparisonMetrics from '@/src/components/application/ComparisonMetrics';
 import ArtistSearchPopover from '@/src/components/application/ArtistSearchPopover';
 import { MarketSelector } from '../_applicationComponent/marketSelector';
@@ -19,32 +17,22 @@ import GenreSelector from '../_applicationComponent/genre-selector';
 import { GENRES } from '@/src/components/application/ArtistTable';
 import { ScrollArea } from '@/src/components/ui/scroll-area';
 
-
-export default function ComparePage() {
+function ComparePageContent() {
   const [selectedArtists, setSelectedArtists] = useState<SpotifyArtist[]>([]);
-  const searchParams = useSearchParams()
-  const currentGenre = searchParams.get("genre") || "afrobeat"
+  const searchParams = useSearchParams();
+  const currentGenre = searchParams.get("genre") || "afrobeat";
 
-  const urlQuery = useSearchParams()
-  const market = urlQuery.get("market") || "NG"
-
-
-
-  // Fetch default artist rankings for the list
-  // const { data: artists, isLoading } = useQuery({
-  //   queryKey: ["artist-rankings", market],
-  //   queryFn: () => fetchArtistRankings(20, 0, market, null),
-  // });
+  const urlQuery = useSearchParams();
+  const market = urlQuery.get("market") || "NG";
 
   const { data: popularArtist, isLoading: popularArtistLoading } = useQuery({
-    queryKey: ["popular-artists", market],
+    queryKey: ["popular-artists", market, currentGenre],
     queryFn: () => getArtistRankings(10, 0, market, currentGenre),
-  })
+  });
 
   const handleAddArtist = (artist: any) => {
     if (selectedArtists.length >= 4) return;
 
-    // Convert to SpotifyArtist format
     const spotifyArtist: SpotifyArtist = {
       id: artist.id,
       name: artist.name,
@@ -69,9 +57,7 @@ export default function ComparePage() {
 
   return (
     <ScrollArea className=" pb-10 md:p-8 relative max-h-[calc(100vh-5rem)] overflow-y-auto no-scrollbar flex flex-col">
-      {/* Market selector - Adjusted for mobile */}
       <div className="sticky top-0 bg-inherit z-40">
-
         <div className="absolute right-4 top-4 md:right-8 md:top-8 z-10">
           <MarketSelector />
         </div>
@@ -79,42 +65,9 @@ export default function ComparePage() {
         <h1 className="tit font-semibold text-white mb-6 md:mb-10">Artist Comparison</h1>
 
         <GenreSelector genres={GENRES} />
-        {/* Filters */}
-        <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
-          {/* <Button
-              variant="outline"
-              size="sm"
-              className="gap-2 rounded-full border-neutral-700 bg-white text-black hover:bg-neutral-100"
-            >
-              <Sliders className="h-4 w-4" />
-              <span className="hidden sm:inline">Filters</span>
-            </Button> */}
-
-          {/* {["1d", "7d", "1m", "All"].map((filter) => (
-              <Button
-                key={filter}
-                variant={timeFilter === filter ? "default" : "outline"}
-                size="sm"
-                className={`rounded-full ${
-                  timeFilter === filter
-                    ? "bg-white text-black hover:bg-neutral-100"
-                    : "border-neutral-700 bg-transparent text-neutral-400 hover:bg-neutral-800 hover:text-white"
-                }`}
-                onClick={() => setTimeFilter(filter)}
-              >
-                {filter}
-              </Button>
-            ))} */}
-        </div>
       </div>
 
-
-
-      {/* Responsive Layout */}
       <div className="flex flex-col overflow-y-auto no-scrollbar lg:flex-row gap-4 md:gap-6">
-
-
-        {/* Artist List - Hidden on mobile when artists selected, shown on tablet+ */}
         <div className={`${selectedArtists.length >= 2 ? 'hidden lg:block' : 'block'} w-full lg:w-[400px] space-y-2 rounded-2xl border border-neutral-800 bg-[#0d0d0d] h-[calc(100vh-20rem)] p-3 md:p-4`}>
           <div className="mb-3 md:mb-4 flex sticky top-0 items-center justify-between text-xs text-neutral-500">
             <span>#</span>
@@ -163,15 +116,7 @@ export default function ComparePage() {
           </div>
         </div>
 
-
-
-
-
-
-        {/* Comparison Area */}
         <div className="flex-1 overflow-y-auto no-scrollbar h-[calc(100vh-20rem)] rounded-2xl border border-neutral-800 bg-[#0d0d0d] p-4 md:p-6">
-
-          {/* Selected Artists */}
           <div className="mb-4 md:mb-6 flex flex-wrap items-center gap-2 md:gap-3">
             <ArtistSearchPopover
               selectedArtists={selectedArtists}
@@ -206,7 +151,6 @@ export default function ComparePage() {
             )}
           </div>
 
-          {/* Comparison Content */}
           {selectedArtists.length >= 2 ? (
             <>
               <ComparisonMetrics artists={selectedArtists} />
@@ -215,19 +159,12 @@ export default function ComparePage() {
                 <ChartRadarDots artists={selectedArtists} />
                 <ChartRadar artists={selectedArtists} />
               </div>
-
             </>
-          ) : selectedArtists.length === 1 ? (
-            <div className="text-center py-16 md:py-24">
-              <div className="text-neutral-500 mb-2 text-sm md:text-base">Add at least one more artist to start comparing</div>
-              <div className="text-xs md:text-sm text-neutral-600">
-                <span className="hidden lg:inline">Click on artists from the list on the left or </span>
-                Use the "Add Artists" button to search
-              </div>
-            </div>
           ) : (
             <div className="text-center py-16 md:py-24">
-              <div className="text-neutral-500 mb-2 text-sm md:text-base">Select artists to compare</div>
+              <div className="text-neutral-500 mb-2 text-sm md:text-base">
+                {selectedArtists.length === 1 ? "Add at least one more artist to start comparing" : "Select artists to compare"}
+              </div>
               <div className="text-xs md:text-sm text-neutral-600">
                 <span className="hidden lg:inline">Click on artists from the list on the left or </span>
                 Use the "Add Artists" button to search
@@ -237,5 +174,13 @@ export default function ComparePage() {
         </div>
       </div>
     </ScrollArea>
+  );
+}
+
+export default function ComparePage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-white">Loading comparison tools...</div>}>
+      <ComparePageContent />
+    </Suspense>
   );
 }
