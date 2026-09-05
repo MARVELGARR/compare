@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import { ReactQueryProvider } from "@/providers/react_query";
-import { Toaster } from "../../components/ui/sonner";
+import { Toaster } from "@/components/ui/sonner";
 import { UserSessionContext } from "@/providers/authContext";
 import { NuqsAdapter } from 'nuqs/adapters/next/app'
 import { NavContextProvider } from "./(app)/_LayoutComponents/Headers/HeaderComponent";

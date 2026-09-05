@@ -20,8 +20,6 @@ const navItems = [
 
 export default function Header() {
     return (
-
-    return (
         <header className="fixed top-0 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-zinc-950/60">
             <div className="container mx-auto flex h-16 items-center justify-between px-4 md:px-6">
                 <Link href="/" className="flex items-center gap-2">

@@ -7,13 +7,13 @@ const isDev = process.env.NODE_ENV === 'development';
 client
     .setEndpoint(
         isDev
-            ? process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT_DEV || 'https://dev.cloud.appwrite.io/v1'
-            : process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1'
+            ? process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT_DEV || process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || 'https://fra.cloud.appwrite.io/v1'
+            : process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT || process.env.NEXT_PUBLIC_APPWRITE_ENDPOINT_DEV || 'https://fra.cloud.appwrite.io/v1'
     )
     .setProject(
-        isDev
-            ? (process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID_DEV as string)
-            : (process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID as string)
+        (isDev
+            ? process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID_DEV || process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID
+            : process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID || process.env.NEXT_PUBLIC_APPWRITE_PROJECT_ID_DEV) as string
     );
 
 

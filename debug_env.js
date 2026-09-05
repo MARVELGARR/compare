@@ -1,5 +1,4 @@
 
-/* eslint-disable @typescript-eslint/no-require-imports */
 const vars = [
     "SPOTIFY_CLIENT_ID",
     "SPOTIFY_CLIENT_SECRET",

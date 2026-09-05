@@ -37,12 +37,8 @@ export function proxy(request: NextRequest) {
   const sessionCookie = request.cookies.getAll().find(c => c.name.startsWith('a_session_'));
   
   if (!sessionCookie && request.nextUrl.pathname.startsWith("/application")) {
-     // The original proxy matched "/application/:path*" and checked "/dashboard"
-     // We will match the original's intent for the application path
-     // If no session and trying to access application, redirect to landing or login
-     // Note: original proxy redirected to /login if starting with /dashboard
-     // Given the project structure, /application seems to be the protected area.
-     // return NextResponse.redirect(new URL("/", request.url));
+     // If no session and trying to access application, redirect to login
+     return NextResponse.redirect(new URL("/login", request.url));
   }
   // --- End original proxy.ts logic ---
 
@@ -59,7 +55,6 @@ export function proxy(request: NextRequest) {
 // Config to match API routes and the application area
 export const config = {
   matcher: [
-    '/api/:path*',
     '/application/:path*',
   ],
 };

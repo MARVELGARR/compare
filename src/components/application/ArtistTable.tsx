@@ -521,7 +521,7 @@ export default function ArtistTable() {
               size="sm"
               className="bg-zinc-800 border-none text-zinc-300 hover:bg-zinc-700 h-8"
               onClick={handleNextPage}
-              disabled={artists?.length !== LIMIT}
+              disabled={!artists || artists.length < LIMIT}
             >
               Next
             </Button>
