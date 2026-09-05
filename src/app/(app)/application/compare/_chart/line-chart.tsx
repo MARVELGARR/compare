@@ -13,13 +13,11 @@ import {
 } from "@/components/ui/card"
 import {
   ChartContainer,
-  ChartLegend,
-  ChartLegendContent,
   ChartTooltip,
   ChartTooltipContent,
   type ChartConfig,
 } from "@/components/ui/chart"
-import { SpotifyArtist } from "@/src/apis/spotify.api.types"
+import { SpotifyArtist, SpotifyTrack } from "@/src/apis/spotify.api.types"
 import { useQueries } from "@tanstack/react-query"
 import { getArtistTopTracksByCountry } from "@/src/apis/spotify"
 
@@ -45,8 +43,16 @@ export function ChartLineTopTracks({ artists, market = "NG" }: ChartLineTopTrack
   const chartData = React.useMemo(() => {
     if (isLoading) return [];
 
+    interface ChartPoint {
+      artistName: string;
+      trackName: string;
+      year: number;
+      popularity: number;
+      payload: SpotifyTrack;
+    }
+
     // Collect all tracks from all artists
-    let allPoints: any[] = [];
+    let allPoints: ChartPoint[] = [];
     
     results.forEach((result, index) => {
         if (!result.data) return;
@@ -64,7 +70,7 @@ export function ChartLineTopTracks({ artists, market = "NG" }: ChartLineTopTrack
         });
 
         // Filter: Keep only the best track (highest popularity) per year for this artist
-        const bestTracksPerYear = new Map<number, any>();
+        const bestTracksPerYear = new Map<number, ChartPoint>();
         
         artistPoints.forEach(point => {
             const existing = bestTracksPerYear.get(point.year);
@@ -160,7 +166,7 @@ export function ChartLineTopTracks({ artists, market = "NG" }: ChartLineTopTrack
                         }
                         return value;
                     }}
-                    formatter={(value, name, item, index) => {
+                    formatter={(value, name, item) => {
                         return (
                           <>
                             <div
@@ -194,7 +200,6 @@ export function ChartLineTopTracks({ artists, market = "NG" }: ChartLineTopTrack
                     stroke={`var(--chart-${(index % 5) + 1})`}
                     strokeWidth={2}
                     dot={({ cx, cy, payload }) => {
-                        const r = 24
                         return (
                           <Dot
                             key={payload.payload.id}

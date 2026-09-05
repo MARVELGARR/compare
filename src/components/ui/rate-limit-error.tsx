@@ -45,7 +45,7 @@ export default function RateLimitError({ resetTime, limit = 50, onRetry }: RateL
                 </AlertTitle>
                 <AlertDescription className="mt-2 space-y-3">
                     <p className="text-sm text-muted-foreground">
-                        You've made too many requests. Please slow down and try again in a moment.
+                        You&apos;ve made too many requests. Please slow down and try again in a moment.
                     </p>
 
                     <div className="flex items-center gap-2 text-sm">

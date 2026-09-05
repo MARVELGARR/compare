@@ -33,9 +33,9 @@ export default async function VerifyPage({
 
       status = "success"
       message = "Your email has been successfully verified."
-    } catch (error: any) {
-     
-      message = error?.message || "The verification link is invalid or expired."
+    } catch (error: unknown) {
+      const message_ = error instanceof Error ? error.message : null;
+      message = message_ || "The verification link is invalid or expired."
     }
   }
 

@@ -166,7 +166,7 @@ function ComparePageContent() {
               </div>
               <div className="text-xs md:text-sm text-neutral-600">
                 <span className="hidden lg:inline">Click on artists from the list on the left or </span>
-                Use the "Add Artists" button to search
+                Use the &quot;Add Artists&quot; button to search
               </div>
             </div>
           )}

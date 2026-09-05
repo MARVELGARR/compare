@@ -75,7 +75,7 @@ export default function ArtistTable() {
 
   // URL State with nuqs (kept for syncing URL <-> Form)
   const [urlMarket, setUrlMarket] = useQueryState<Market>('market', parseAsStringLiteral(['NG', 'US', 'GB', 'GH', 'ZA'] as const).withDefault('NG'));
-  const [urlGenre, setUrlGenre] = useQueryState('genre', parseAsString.withDefault('afropop'));
+  const [urlGenre, setUrlGenre] = useQueryState('genre', parseAsString.withDefault('afrobeat'));
   const [page, setPage] = useQueryState('page', parseAsInteger.withDefault(1));
 
   // Initialize React Hook Form
@@ -105,7 +105,7 @@ export default function ArtistTable() {
     }
   }, [page]);
 
-  const { data: artists, isLoading, isFetching, error } = useQuery({
+  const { data: artists, isFetching } = useQuery({
     queryKey: ["artist-rankings", formValues.market, formValues.genre, page],
     queryFn: () => getArtistRankingsByGenre(LIMIT, (page - 1) * LIMIT, formValues.market, formValues.genre || null),
     placeholderData: keepPreviousData,
@@ -133,7 +133,7 @@ export default function ArtistTable() {
       },
       {
         accessorKey: "name",
-        header: ({ column }) => {
+        header: () => {
           return (
             <div className="text-right">
               <Button

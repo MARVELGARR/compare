@@ -1,4 +1,5 @@
 
+/* eslint-disable @typescript-eslint/no-require-imports */
 const fs = require('fs');
 const path = require('path');
 const https = require('https');
@@ -25,7 +26,7 @@ try {
                 }
 
                 if (key === 'NEXT_PUBLIC_SPOTIFY_CLIENT_ID_DEV') clientId = val;
-                if (key === 'NEXT_PUBLIC_SPOTIFY_SECRET_DEV') clientSecret = val;
+                if (key === 'SPOTIFY_CLIENT_SECRET_DEV' || key === 'NEXT_PUBLIC_SPOTIFY_SECRET_DEV') clientSecret = val;
             }
         });
     }

@@ -4,7 +4,7 @@ import { ReactNode } from "react";
 import { Button } from "@/components/ui/button";
 import { TrendingUp, LayoutGrid } from "lucide-react";
 import { usePathname, useRouter } from "next/navigation";
-import { HeaderContainer, NavContextProvider } from "./_LayoutComponents/Headers/HeaderComponent";
+import { HeaderContainer } from "./_LayoutComponents/Headers/HeaderComponent";
 
 const AppLayout = ({ children }: { children: ReactNode }) => {
   const pathname = usePathname();

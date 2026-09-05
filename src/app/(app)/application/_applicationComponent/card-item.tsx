@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Sparkline from "./sparkline"
 
 interface CardItemProps {
@@ -11,7 +12,7 @@ interface CardItemProps {
 export default function CardItem({ avatar, name, trendData, trendColor }: CardItemProps) {
   return (
     <div className="flex items-center gap-3 py-3">
-      <img src={avatar || "/placeholder.svg"} alt={name} className="w-10 h-10 rounded-lg object-cover" />
+      <Image src={avatar || "/placeholder.svg"} alt={name} width={40} height={40} className="w-10 h-10 rounded-lg object-cover" />
       <div className="flex-1 min-w-0">
         <p className="text-sm font-medium text-foreground truncate">{name}</p>
       </div>

@@ -1,9 +1,8 @@
 import { Suspense } from "react";
-import { account } from "@/src/libs/appwrite";
 import ArtistTable from "../../../components/application/ArtistTable";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
 
-export default async function Page() {
+export default function Page() {
 
 
   // const user = await account.get()

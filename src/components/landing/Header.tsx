@@ -1,7 +1,6 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { Menu } from "lucide-react";
 
 import { Button } from "@/src/components/ui/button";
@@ -20,7 +19,7 @@ const navItems = [
 ];
 
 export default function Header() {
-    const pathname = usePathname();
+    return (
 
     return (
         <header className="fixed top-0 w-full border-b border-zinc-800 bg-zinc-950/80 backdrop-blur-md z-50 supports-[backdrop-filter]:bg-zinc-950/60">

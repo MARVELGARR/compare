@@ -1,16 +1,16 @@
 // apiClient.ts
 
-export type ApiClientArgs<TBody = any> = {
+export type ApiClientArgs<TBody = unknown> = {
   url: string;
   params?: Record<string, string | number>;
-  query?: Record<string, any>;
+  query?: Record<string, unknown>;
   method?: "GET" | "POST" | "PUT" | "DELETE";
   body?: TBody;
   headers?: Record<string, string>;
   token?: string; // for bearer auth
 };
 
-export async function apiClient<TResponse, TBody = any>(
+export async function apiClient<TResponse, TBody = unknown>(
   args: ApiClientArgs<TBody>
 ): Promise<TResponse> {
   const {

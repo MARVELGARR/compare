@@ -47,7 +47,7 @@ const LoginForm = ({ className }: { className?: string }) => {
       setIsLoading(false)
       return router.push("/application")
     }
-    catch(error){
+    catch{
       toast.error("Loging failed")
       setIsLoading(false)
     }

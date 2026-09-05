@@ -74,7 +74,7 @@ const SignupForm = ({ className }: { className?: string }) => {
 
          
     }
-    catch(error){
+    catch{
         toast.error("something went wrong")
     }
   };

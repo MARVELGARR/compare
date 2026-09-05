@@ -12,10 +12,11 @@ export function useRateLimit() {
     isRateLimited: false,
   });
 
-  const handleRateLimitError = useCallback((error: any) => {
+  const handleRateLimitError = useCallback((error: unknown) => {
     // Check if it's a rate limit error (429 status)
-    if (error?.status === 429 || error?.response?.status === 429) {
-      const data = error?.data || error?.response?.data || {};
+    const err = error as { status?: number; response?: { status?: number; data?: Record<string, number> }; data?: Record<string, number> };
+    if (err?.status === 429 || err?.response?.status === 429) {
+      const data = err?.data || err?.response?.data || {};
       
       setRateLimitInfo({
         isRateLimited: true,

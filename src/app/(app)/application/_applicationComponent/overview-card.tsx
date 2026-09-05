@@ -1,5 +1,4 @@
 import type React from "react"
-import { ArrowRight } from "lucide-react"
 import CardItem from "./card-item"
 
 interface CardData {

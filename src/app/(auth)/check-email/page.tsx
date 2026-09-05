@@ -1,7 +1,8 @@
 import { Mail, CheckCircle } from "lucide-react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
+import type { Metadata } from "next"
 
-export const metadata = {
+export const metadata: Metadata = {
   title: "Check Your Email",
   description: "Verify your email address to complete your account setup",
 }
@@ -20,7 +21,7 @@ export default function CheckEmail() {
           <div className="space-y-2">
             <CardTitle className="text-2xl">Check your email</CardTitle>
             <CardDescription className="text-base">
-              We've sent you a confirmation link to verify your email address.
+              We&apos;ve sent you a confirmation link to verify your email address.
             </CardDescription>
           </div>
         </CardHeader>
@@ -46,7 +47,7 @@ export default function CheckEmail() {
             <div className="flex gap-3">
               <CheckCircle className="w-5 h-5 text-green-600 shrink-0 mt-0.5" />
               <div className="text-sm">
-                <p className="font-medium">Don't see the email?</p>
+                <p className="font-medium">Don&apos;t see the email?</p>
                 <p className="text-muted-foreground">Check your spam or junk folder</p>
               </div>
             </div>
@@ -54,7 +55,7 @@ export default function CheckEmail() {
 
           <div className="bg-muted/50 rounded-lg p-3">
             <p className="text-xs text-muted-foreground">
-              The link will expire in 24 hours. If you don't receive an email, please try signing up again.
+              The link will expire in 24 hours. If you don&apos;t receive an email, please try signing up again.
             </p>
           </div>
         </CardContent>

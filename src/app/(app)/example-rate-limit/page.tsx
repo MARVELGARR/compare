@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { Button } from "@/src/components/ui/button";
 import RateLimitError from "@/src/components/ui/rate-limit-error";
@@ -11,7 +11,7 @@ async function fetchData() {
     const response = await fetch("/api/some-endpoint");
 
     if (!response.ok) {
-        const error: any = new Error("API request failed");
+        const error = new Error("API request failed") as Error & { status?: number; data?: unknown };
         error.status = response.status;
 
         if (response.status === 429) {

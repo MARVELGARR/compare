@@ -17,12 +17,12 @@ export default function ForgetPasswordPage() {
 
           {/* Title */}
           <h1 className="text-2xl font-bold text-center">
-            "Forgot Password?
+            Forgot Password?
           </h1>
 
           {/* Description */}
           <p className="text-center text-muted-foreground text-sm leading-relaxed">
-   Enter your email address and we'll send you a link to reset your password.
+            Enter your email address and we&apos;ll send you a link to reset your password.
           </p>
 
           {/* Form or Success Message */}

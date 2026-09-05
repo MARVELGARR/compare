@@ -6,6 +6,7 @@ import { ArrowLeft, Play, Disc } from "lucide-react";
 import Image from "next/image";
 import { getArtist, getArtistTopTracksByCountry } from "@/src/apis/spotify";
 import { ScrollArea } from "@/src/components/ui/scroll-area";
+import type { SpotifyTrack } from "@/src/apis/spotify.api.types";
 
 
 export default function ArtistProfilePage() {
@@ -15,11 +16,13 @@ export default function ArtistProfilePage() {
   const { data: artist, isLoading: isArtistLoading } = useQuery({
     queryKey: ["artist", id],
     queryFn: () => getArtist(id),
+    enabled: !!id,
   });
 
   const { data: topTracks, isLoading: isTracksLoading } = useQuery({
     queryKey: ["artist-tracks", id],
     queryFn: () => getArtistTopTracksByCountry(id),
+    enabled: !!id,
   });
 
 
@@ -71,7 +74,7 @@ export default function ArtistProfilePage() {
               <div className="text-zinc-500 text-xs uppercase tracking-wide">Popularity Score</div>
             </div>
             <div>
-              <div className="text-2xl font-bold">{(artist as any).followers?.total ? Intl.NumberFormat('en-US').format((artist as any).followers.total) : 'N/A'}</div>
+              <div className="text-2xl font-bold">{artist.followers?.total ? Intl.NumberFormat('en-US').format(artist.followers.total) : 'N/A'}</div>
               <div className="text-zinc-500 text-xs uppercase tracking-wide">Followers</div>
             </div>
           </div>
@@ -82,7 +85,7 @@ export default function ArtistProfilePage() {
       <div className="max-w-4xl border-4 min-h-0 flex-1 flex flex-col">
         <h2 className="text-2xl  font-bold mb-6 flex items-center gap-2"><Disc className="w-6 h-6" /> Top Tracks</h2>
         <ScrollArea className=" flex flex-col flex-1 overflow-y-auto no-scrollbar">
-          {topTracks?.tracks.slice(0, 5).map((track: any, index: number) => (
+          {topTracks?.tracks.slice(0, 5).map((track: SpotifyTrack, index: number) => (
             <div key={track.id} className="flex items-center gap-4 p-3 rounded-md hover:bg-zinc-900/60 transition-colors group">
               <div className="w-8 text-center text-zinc-500 font-mono">{index + 1}</div>
               <div className="relative w-12 h-12 bg-zinc-800 rounded flex-shrink-0 overflow-hidden">
@@ -93,7 +96,7 @@ export default function ArtistProfilePage() {
               </div>
               <div className="flex-1 min-w-0">
                 <div className="font-bold truncate text-white">{track.name}</div>
-                <div className="text-xs text-zinc-500 truncate">{track.artists.map((a: any) => a.name).join(', ')}</div>
+                <div className="text-xs text-zinc-500 truncate">{track.artists.map((a) => a.name).join(', ')}</div>
               </div>
               <div className="text-zinc-400 text-sm hidden md:block w-32 text-right">
                 {Math.floor(track.duration_ms / 60000)}:{((track.duration_ms % 60000) / 1000).toFixed(0).padStart(2, '0')}

@@ -20,13 +20,14 @@ const ForgetPasswordForm = () => {
     setIsLoading(true);
 
     forgetPassword(email)
-      .then((res) => {
+      .then(() => {
         toast.success("An email has been sent to you");
         router.push("/check-email");
       })
-      .catch((err) => {
+      .catch((err: unknown) => {
         console.error(err);
-        setError(err.message || "Failed to reset password");
+        const message = err instanceof Error ? err.message : "Failed to reset password";
+        setError(message);
         toast.error("Failed to reset password");
       })
       .finally(() => setIsLoading(false));
