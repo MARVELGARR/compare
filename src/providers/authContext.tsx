@@ -28,18 +28,18 @@ interface User {
   emailVerification: boolean;
   phoneVerification: boolean;
   mfa: boolean;
-  prefs: Record<string, any>; // flexible object
+  prefs: Record<string, unknown>; // flexible object
   targets: Target[];
   accessedAt: string; // ISO date string
 }
 type AuthContextType = {
   User: User | null
   isLoading: boolean
-  logout: () => void
+  logout: () => Promise<void>
   isAuthenticated: boolean
 }
 
-const AuthContext = createContext<AuthContextType | null>({ User: null, isLoading: false, logout: () => { }, isAuthenticated: false })
+const AuthContext = createContext<AuthContextType | null>({ User: null, isLoading: false, logout: async () => { }, isAuthenticated: false })
 
 
 export const UserSessionContext = ({ children }: { children: ReactNode }) => {
@@ -63,8 +63,11 @@ export const UserSessionContext = ({ children }: { children: ReactNode }) => {
       .finally(() => setIsLoading(false));
   }, []);
 
-  const logout = () => account.deleteSessions()
-  const isAuthenticated = User && User !== null ? true : false
+  const logout = async () => {
+    await account.deleteSessions();
+    setUser(null);
+  };
+  const isAuthenticated = User !== null
   return (
     <AuthContext.Provider value={{ User, isLoading, logout, isAuthenticated }}>
       {children}

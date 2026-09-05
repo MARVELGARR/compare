@@ -41,12 +41,15 @@ const LoginForm = ({ className }: { className?: string }) => {
 
       if(!user){
         toast.error("failed to login")
+        setIsLoading(false)
+        return
       }
       setIsLoading(false)
       return router.push("/application")
     }
     catch(error){
       toast.error("Loging failed")
+      setIsLoading(false)
     }
   }
 

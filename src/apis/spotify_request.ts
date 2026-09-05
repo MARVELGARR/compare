@@ -12,7 +12,6 @@ export async function spotifyRequest<T>(
 
   if (typeof window === "undefined") {
     // Server-side: call the logic directly to avoid relative URL issues
-    const { getSpotifyAccessToken } = await import("./spotifyToken");
     const accessToken = await getSpotifyAccessToken();
     if (!accessToken) throw new Error("Failed to acquire Spotify access token on server");
     token = accessToken;
@@ -47,10 +46,10 @@ export async function spotifyRequest<T>(
         headers: {
           Authorization: `Bearer ${token}`
         },
-        cache: "force-cache"
+        cache: "no-store"
       });
 
-      if (res.ok) return res.json();
+      if (res.ok) return res.json() as Promise<T>;
 
       // Transient errors that are worth retrying
       if (attempt < maxRetries && [429, 502, 503, 504].includes(res.status)) {
@@ -60,8 +59,14 @@ export async function spotifyRequest<T>(
         continue;
       }
 
+      // Non-retryable HTTP error: fail immediately, do not fall into the
+      // network-error retry path below.
       throw new Error(`Spotify API Error: ${res.status}`);
     } catch (err) {
+      // If the error is an HTTP error we already decided not to retry, rethrow.
+      if (err instanceof Error && err.message.startsWith("Spotify API Error:")) {
+        throw err;
+      }
       if (attempt === maxRetries) throw err;
       // For network-level errors (not HTTP status codes)
       console.warn(`Network error on attempt ${attempt}. Retrying in ${delay}ms...`, err);

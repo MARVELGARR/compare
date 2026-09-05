@@ -21,7 +21,18 @@ export async function getSpotifyAccessToken() {
   };
 
   const clientId = sanitize(process.env.NEXT_PUBLIC_SPOTIFY_CLIENT_ID_DEV);
-  const clientSecret = sanitize(process.env.NEXT_PUBLIC_SPOTIFY_SECRET_DEV);
+  // Server-only secret. Supports both the documented _DEV name and legacy fallbacks.
+  const clientSecret = sanitize(
+    process.env.SPOTIFY_CLIENT_SECRET_DEV ||
+      process.env.SPOTIFY_CLIENT_SECRET
+  );
+
+  if (!clientId || !clientSecret) {
+    throw new Error(
+      "Missing Spotify credentials: set NEXT_PUBLIC_SPOTIFY_CLIENT_ID_DEV and SPOTIFY_CLIENT_SECRET_DEV"
+    );
+  }
+
   const auth = Buffer.from(`${clientId}:${clientSecret}`).toString("base64");
 
   const res = await fetch("https://accounts.spotify.com/api/token", {
@@ -38,9 +49,15 @@ export async function getSpotifyAccessToken() {
 
   const data = await res.json();
 
-  // Save to server memory cache
+  if (!res.ok || !data.access_token) {
+    throw new Error(
+      `Failed to acquire Spotify token: ${res.status} ${data.error_description || data.error || ""}`.trim()
+    );
+  }
+
+  // Save to server memory cache (with 60s skew buffer)
   cachedToken = data.access_token;
-  expiresAt = Date.now() + data.expires_in * 1000;
+  expiresAt = Date.now() + data.expires_in * 1000 - 60_000;
 
   return cachedToken;
 }

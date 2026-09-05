@@ -18,7 +18,7 @@ type NavContext = {
     handleIsOpen: () => void
 }
 
-const NavContext = createContext<NavContext>({ isOpen: true, handleIsOpen: () => { } })
+const NavContext = createContext<NavContext>({ isOpen: false, handleIsOpen: () => { } })
 
 
 export const NavContextProvider = ({ children }: { children: ReactNode }) => {
@@ -28,7 +28,6 @@ export const NavContextProvider = ({ children }: { children: ReactNode }) => {
 
 
     const handleIsOpen = () => {
-        console.log("lklknkds")
         setIsOpen((prev) => !prev)
     }
 
@@ -37,7 +36,7 @@ export const NavContextProvider = ({ children }: { children: ReactNode }) => {
     return (
         <NavContext.Provider value={{ isOpen, handleIsOpen }}>
 
-            {isOpen && <div className="w-full lg:hidden h-full rounded-xl z-10 absolute left-0 top-0 bottom-0 right-0 bg-black opacity-50"></div>}
+            {isOpen && <div onClick={handleIsOpen} className="w-full lg:hidden h-full rounded-xl z-10 absolute left-0 top-0 bottom-0 right-0 bg-black opacity-50"></div>}
 
             {children}
         </NavContext.Provider>

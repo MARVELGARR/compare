@@ -22,15 +22,14 @@ function ComparePageContent() {
   const searchParams = useSearchParams();
   const currentGenre = searchParams.get("genre") || "afrobeat";
 
-  const urlQuery = useSearchParams();
-  const market = urlQuery.get("market") || "NG";
+  const market = searchParams.get("market") || "NG";
 
   const { data: popularArtist, isLoading: popularArtistLoading } = useQuery({
     queryKey: ["popular-artists", market, currentGenre],
     queryFn: () => getArtistRankings(10, 0, market, currentGenre),
   });
 
-  const handleAddArtist = (artist: any) => {
+  const handleAddArtist = (artist: ArtistRanking) => {
     if (selectedArtists.length >= 4) return;
 
     const spotifyArtist: SpotifyArtist = {
@@ -79,7 +78,7 @@ function ComparePageContent() {
             {popularArtistLoading ? (
               <div className="text-center py-8 text-neutral-500">Loading artists...</div>
             ) : (
-              popularArtist?.sort((a, b) => b.popularity - a.popularity).slice(0, 15).map((artist: ArtistRanking, index: number) => (
+              [...(popularArtist ?? [])].sort((a, b) => b.popularity - a.popularity).slice(0, 15).map((artist: ArtistRanking, index: number) => (
                 <div
                   key={artist.id}
                   className="group flex items-center gap-2 md:gap-4 rounded-lg p-2 md:p-3 transition-colors hover:bg-neutral-800/50 cursor-pointer"

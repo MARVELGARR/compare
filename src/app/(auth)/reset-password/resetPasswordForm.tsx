@@ -6,7 +6,6 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { updatePasswordRecovery } from "./resetPassword.config";
 import { useRouter } from "next/navigation";
-import { account } from "@/src/libs/appwrite";
 
 const ResetPasswordForm = ({userId, secret}:{userId: string, secret: string}) => {
     const [password, setPassword] = useState("")
@@ -18,13 +17,17 @@ const ResetPasswordForm = ({userId, secret}:{userId: string, secret: string}) =>
 
     const onSubmit = () =>{
 
+        if (!password || password.length < 8) {
+            toast.error("Password must be at least 8 characters");
+            return;
+        }
+
         setIsLoading(true)
       updatePasswordRecovery(userId, secret, password)
         .then(async () => {
-            await account.deleteSessions()
             toast.success("Password reseted")
         })
-        .catch((err) => {
+        .catch(() => {
             toast.error("Failed to reset password")
         }).finally(()=>{
             setIsLoading(false)

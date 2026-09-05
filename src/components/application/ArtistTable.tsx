@@ -213,7 +213,7 @@ export default function ArtistTable() {
         cell: ({ row }) => (
           <div className="flex items-center justify-end gap-2 text-white res_font">
             <div className="h-8 w-20 flex items-end gap-[2px]">
-              {row.original.trendData.map((val: any, i: any) => (
+              {row.original.trendData.map((val: number, i: number) => (
                 <div
                   key={i}
                   className={`w-full rounded-t-sm ${i === row.original.trendData.length - 1 ? 'bg-green-500 animate-pulse' : 'bg-green-500/50'}`}
@@ -484,7 +484,7 @@ export default function ArtistTable() {
                 </div>
 
                 <div className="flex flex-wrap gap-1 mt-1">
-                  {row.original.genres.slice(0, 3).map((genre) => (
+            {row.original.genres.slice(0, 3).map((genre: string) => (
                     <span key={genre} className="px-2 py-0.5 bg-zinc-800 rounded text-[10px] text-zinc-300 capitalize">
                       {genre}
                     </span>

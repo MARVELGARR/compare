@@ -10,11 +10,12 @@ import { Badge } from '@/components/ui/badge';
 import { Search, Plus, Loader2 } from 'lucide-react';
 import { fetchArtistRankings } from '@/src/app/(app)/application/actions';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
+import { ArtistRanking } from '@/src/apis/spotify';
 import { useQueryState } from 'nuqs';
 
 interface ArtistSearchPopoverProps {
   selectedArtists: SpotifyArtist[];
-  onAddArtist: (artist: any) => void;
+  onAddArtist: (artist: ArtistRanking) => void;
   maxArtists?: number;
 }
 
@@ -40,7 +41,7 @@ export default function ArtistSearchPopover({
     enabled: open, // Only fetch when popover is open
   });
 
-  const handleAddArtist = (artist: any) => {
+  const handleAddArtist = (artist: ArtistRanking) => {
     if (selectedArtists.length >= maxArtists) return;
     onAddArtist(artist);
   };

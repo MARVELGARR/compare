@@ -26,12 +26,12 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
   }, {} as Record<string, number>);
 
   const commonGenres = Object.entries(genreCounts)
-    .filter(([_, count]) => count > 1)
+    .filter((entry) => entry[1] > 1)
     .map(([genre]) => genre);
 
   const uniqueGenres = artists.map(artist => ({
     artist: artist.name,
-    genres: (artist.genres || []).filter(g => !commonGenres.includes(g))
+    genres: (artist.genres || []).filter((g: string) => !commonGenres.includes(g))
   }));
 
   return (
@@ -125,7 +125,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
           <div className="mb-4">
             <div className="text-sm text-zinc-500 mb-2">Common Genres</div>
             <div className="flex flex-wrap gap-2">
-              {commonGenres.map(genre => (
+              {commonGenres.map((genre: string) => (
                 <span key={genre} className="px-3 py-1 bg-green-500/20 text-green-500 rounded-full text-sm capitalize border border-green-500/30">
                   {genre}
                 </span>
@@ -140,7 +140,7 @@ export default function ComparisonMetrics({ artists }: ComparisonMetricsProps) {
               <div key={artist}>
                 <div className="text-sm text-zinc-500 mb-1">{artist} Only</div>
                 <div className="flex flex-wrap gap-2">
-                  {genres.map(genre => (
+                  {genres.map((genre: string) => (
                     <span key={genre} className="px-3 py-1 bg-zinc-800 text-zinc-400 rounded-full text-sm capitalize">
                       {genre}
                     </span>

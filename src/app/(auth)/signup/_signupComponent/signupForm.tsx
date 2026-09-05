@@ -49,11 +49,11 @@ const SignupForm = ({ className }: { className?: string }) => {
         const result = await createUserAction({...values})
         
         if (!result.success) {
-           toast.success(result.message)
-            return
+           toast.error(result.message)
+           return
         }
         else{
-            toast.error(result.message)
+            toast.success(result.message)
         }
         
         const LoginResult = await account.createEmailPasswordSession(values.email, values.password)
@@ -63,12 +63,13 @@ const SignupForm = ({ className }: { className?: string }) => {
         }
 
         await account.createEmailVerification({
-            url: "http://localhost:3000/email-verify"
+            url: process.env.NEXT_PUBLIC_EMAIL_VERIFY_REDIRECT_DEV || `${window.location.origin}/email-verify`
          }).then(()=>{
             toast.success("An email has be sent to you ")
             router.push('/check-email')
          }).catch(()=>{
             toast.error("something went wrong")
+            router.push('/check-email')
          })
 
          

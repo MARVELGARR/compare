@@ -56,7 +56,7 @@ export default function ComparisonHeader({ artists, onRemoveArtist }: Comparison
               <h3 className="font-bold text-white text-lg mb-1 truncate">{artist.name}</h3>
 
               <div className="flex flex-wrap gap-1 justify-center mb-3">
-                {artist.genres?.slice(0, 2).map((genre) => (
+                {artist.genres?.slice(0, 2).map((genre: string) => (
                   <span
                     key={genre}
                     className="px-2 py-0.5 bg-zinc-800 rounded text-xs text-zinc-400 capitalize"

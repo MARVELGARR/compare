@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Search, X, TrendingUp } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
-import { getArtistRankings } from '@/src/apis/spotify';
+import { getArtist, getArtistRankings } from '@/src/apis/spotify';
 import { SpotifyArtist } from '@/src/apis/spotify.api.types';
 import Image from 'next/image';
 
@@ -34,9 +34,8 @@ export default function ComparisonSearch({
   const handleAddArtist = async (artistId: string) => {
     if (selectedArtists.length >= maxArtists) return;
 
-    // Fetch full artist details
-    const response = await fetch(`https://api.spotify.com/v1/artists/${artistId}`);
-    const artist = await response.json();
+    // Fetch full artist details via authenticated server-side proxy
+    const artist = await getArtist(artistId);
 
     if (!selectedArtists.find(a => a.id === artistId)) {
       onArtistsSelected([...selectedArtists, artist]);

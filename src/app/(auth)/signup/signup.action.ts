@@ -6,8 +6,9 @@ export async function createUserAction({email, password}:{email: string, passwor
   try {
     const newUser = await account.create(ID.unique(), email, password)
     return { message:`Account ${email} was created successfully`, success: true, userId: newUser.$id }
-  } catch (error: any) {
+  } catch (error: unknown) {
     console.error(error)
-    return { success: false, message: error.message }
+    const message = error instanceof Error ? error.message : "Failed to create account";
+    return { success: false, message }
   }
 }
