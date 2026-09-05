@@ -1,55 +1,81 @@
-export class ApiError extends Error {
-  status: number;
-  payload?: unknown;
+// apiClient.ts
 
-  constructor(message: string, status: number, payload?: unknown) {
-    super(message);
-    this.name = "ApiError";
-    this.status = status;
-    this.payload = payload;
-  }
-}
-
-type ApiClientOptions = RequestInit & {
-  query?: Record<string, string | number | boolean | undefined>;
+export type ApiClientArgs<TBody = any> = {
+  url: string;
+  params?: Record<string, string | number>;
+  query?: Record<string, any>;
+  method?: "GET" | "POST" | "PUT" | "DELETE";
+  body?: TBody;
+  headers?: Record<string, string>;
+  token?: string; // for bearer auth
 };
 
-function buildUrl(input: string, query?: ApiClientOptions["query"]): string {
-  if (!query) return input;
-  const params = new URLSearchParams();
-  for (const [key, value] of Object.entries(query)) {
-    if (value !== undefined) params.append(key, String(value));
-  }
-  const suffix = params.toString();
-  return suffix ? `${input}?${suffix}` : input;
-}
+export async function apiClient<TResponse, TBody = any>(
+  args: ApiClientArgs<TBody>
+): Promise<TResponse> {
+  const {
+    url,
+    params,
+    query,
+    method = "GET",
+    body,
+    headers = {},
+    token,
+  } = args;
 
-export async function apiClient<T>(
-  input: string,
-  { query, headers, ...init }: ApiClientOptions = {}
-): Promise<T> {
-  const res = await fetch(buildUrl(input, query), {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...headers,
-    },
+  // 1. Build URL
+  let fullUrl = url;
+
+  // Path params replacement e.g. /users/:id → /users/10
+  if (params) {
+    Object.entries(params).forEach(([key, value]) => {
+      fullUrl = fullUrl.replace(`:${key}`, String(value));
+    });
+  }
+
+  // Query params
+  if (query) {
+    const search = new URLSearchParams();
+    for (const [key, value] of Object.entries(query)) {
+      if (value !== undefined && value !== null) {
+        search.append(key, String(value));
+      }
+    }
+    fullUrl += `?${search.toString()}`;
+  }
+
+  // 2. Auto headers
+  const finalHeaders: Record<string, string> = {
+    ...headers,
+  };
+
+  if (token) {
+    finalHeaders["Authorization"] = `Bearer ${token}`;
+  }
+
+  // 3. Body handling
+  let fetchBody: BodyInit | undefined;
+
+  if (method !== "GET" && body) {
+    // If the body is FormData → send as-is
+    if (body instanceof FormData) {
+      fetchBody = body;
+    } else {
+      finalHeaders["Content-Type"] = "application/json";
+      fetchBody = JSON.stringify(body);
+    }
+  }
+
+  // 4. Final fetch
+  const res = await fetch(fullUrl, {
+    method,
+    headers: finalHeaders,
+    body: fetchBody,
   });
 
   if (!res.ok) {
-    let payload: unknown = undefined;
-    try {
-      payload = await res.json();
-    } catch {
-      // non-JSON error body — ignore
-    }
-    throw new ApiError(
-      `Request failed with status ${res.status}`,
-      res.status,
-      payload
-    );
+    throw new Error(`API Error: ${res.status} - ${await res.text()}`);
   }
 
-  if (res.status === 204) return undefined as T;
-  return (await res.json()) as T;
+  return res.json() as Promise<TResponse>;
 }
