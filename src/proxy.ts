@@ -31,16 +31,13 @@ export function proxy(request: NextRequest) {
     );
   }
 
-  // --- Logic from original proxy.ts ---
-  // The original used "a_session_[YOUR_PROJECT_ID]"
-  // Since we have multiple IDs in env, we'll try to find any session cookie starting with "a_session_"
-  const sessionCookie = request.cookies.getAll().find(c => c.name.startsWith('a_session_'));
-  
-  if (!sessionCookie && request.nextUrl.pathname.startsWith("/application")) {
-     // If no session and trying to access application, redirect to login
-     return NextResponse.redirect(new URL("/login", request.url));
-  }
-  // --- End original proxy.ts logic ---
+  // NOTE: No auth check here on purpose.
+  // The app logs in with the Appwrite *browser* SDK, which keeps the session
+  // in localStorage — it never sets an `a_session_*` cookie. So a middleware
+  // cookie check always looks "logged out" and bounces freshly logged-in
+  // users straight back to /login (login -> /application -> /login loop).
+  // Route protection lives in `src/app/(app)/layout.tsx`, which guards with
+  // `useAuth()` (i.e. a real `account.get()` session check) instead.
 
   const response = NextResponse.next();
   
